@@ -1,0 +1,93 @@
+@charset 'UTF-8';
+/* コンテンツチーム*/
+.half-content{
+    height: auto;
+}
+.left-content{
+    border-right: 2px solid #666;
+}
+.tact h3{
+    padding: 0 2% 2% 2%;
+    text-align: center;
+    color: white;
+}
+.sort-tact{
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+.tact-list ul{
+    max-width: 800px;
+    margin-left: 30px;
+}
+.tact-list li{
+    width: fit-content;
+    padding: 7px;
+}
+.main-nav a {
+    color: white;
+    font-family: "Reggae One", system-ui;
+    font-weight: 400;
+    font-style: normal;
+}
+.attack-tact-width{
+    background-color: rgb(255, 0, 0);
+    box-shadow: 3px 3px 1px black;
+}
+.defence-tact-width{
+    background-color: rgb(53, 221, 255);
+    box-shadow: 3px 3px 1px black;
+}
+/* コンテンツ個人*/
+.extra-text{
+    margin-top: 60px;
+}
+.extra-tact-width{
+    background-color: rgb(0, 194, 0);
+    box-shadow: 3px 3px 1px black;
+}
+.extra-tact-width img{
+    filter: brightness(0);
+}
+.article-box{
+    overflow-x: scroll;
+    flex-wrap: nowrap;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    justify-content: flex-start;
+}
+.article-items{
+    flex-shrink: 0;
+}
+.content-team h2{
+    margin: 120px 0 50px 0;
+}
+.content-indiv h2{
+    margin: 120px 0 50px 0;
+}
+.h2-span{
+    box-shadow: 2px 2px 2px 2px black;
+}
+.sort-tact a{
+    color: white;
+}
+.cat-cul{
+    margin: 30px auto;
+    width: 700px;
+    pointer-events: none;
+}
+.cat-color-0 span{
+    color: red;
+}
+.cat-color-1 span{
+    color: rgb(111, 255, 0);
+}
+.cat-color-2 span{
+    color: rgb(255, 136, 0);
+}
+.cat-color-3 span{
+    color: rgb(172, 172, 172);
+}
+.cat-cul img{
+    width: 52.5px;
+    height: 52.5px;
+}

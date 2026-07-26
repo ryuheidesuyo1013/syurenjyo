@@ -1,0 +1,41 @@
+@charset 'UTF-8';
+.catch-copy{
+    text-align: center;
+    margin: 70px 0;
+    font-size: 70px;
+    color: yellow;
+    text-shadow: 3px 0 6px #000000, 0 3px 6px #000000, -3px 0 6px #000000, 0 -3px 6px #000000;
+}
+.catch-box-container{
+    display: flex;
+}
+.catch-box{
+    border: 2px solid black;
+    width: 500px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    margin: 30px auto;
+}
+.catch-box p{
+    font-size: 20px;
+    font-family: "Reggae One", system-ui;
+    margin: 20px 50px;
+    line-height: 50px;
+}
+.c-b-1 h4, .red-shadow{
+    text-shadow: 2px 0 3px red, 0 2px 3px red, -2px 0 3px red, 0 -2px 3px red;
+}
+.c-b-2 h4, .yellow-shadow{
+    text-shadow: 2px 0 3px yellow, 0 2px 3px yellow, -2px 0 3px yellow, 0 -2px 3px yellow;
+}
+.c-b-3 h4, .green-shadow{
+    text-shadow: 2px 0 3px rgb(0, 255, 0), 0 2px 3px rgb(0, 255, 0), -2px 0 3px rgb(0, 255, 0), 0 -2px 3px rgb(0, 255, 0);
+}
+.catch-word h4{
+    padding: 10px;
+    font-size: 30px;
+    font-family: "Reggae One", system-ui;
+    width: 100px;
+    margin: 0 auto;
+    border-bottom: 3px solid black;
+}

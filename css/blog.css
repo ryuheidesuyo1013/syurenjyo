@@ -1,0 +1,502 @@
+@charset 'UTF-8';
+.back1{
+    background-color: rgb(244, 238, 225);
+}
+.article-main{
+    margin-left: auto;
+    margin-right: 50px;
+    width: 800px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 1px 1px 3px 3px rgb(71, 71, 71);
+}
+.article-sub{
+    margin-right: auto;
+    width: 400px;
+}
+.category-container{
+    background-color: white;
+    margin-top: 50px;
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: 1px 1px 3px 3px rgb(71, 71, 71);
+}
+.category-ly{
+    margin: 10px auto;
+    border-bottom: 5px solid rgb(40, 155, 183);
+    font-family: "Dela Gothic One", sans-serif;
+    display: inline-block;  
+}
+.list-container {
+    text-align: left; /* liを左寄せに */
+}
+.list-container a{
+    margin: 10px;
+    font-size: 20px;
+}
+.list-container li{
+    padding: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 20px;
+    position: relative;
+    box-shadow: 1px 1px 3px 3px rgb(71, 71, 71);
+}
+.li-new{
+    background-color: red;
+}
+.li-pl{
+    background-color: greenyellow;
+}
+.li-oy{
+    background-color: orange;
+}
+.li-sd{
+    background-color: rgb(177, 177, 177);
+}
+.article-font{
+    font-family: "Noto Serif JP", serif;
+    color: rgb(0, 0, 0);
+    font-weight: 800;
+}
+.yajirusi{
+    right: 20px;
+    position: absolute;
+    background-color: black;
+    color: white;
+    font-weight: 900;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+}
+.article-h2-img{
+    width: 42px;
+    height: 42px;
+    margin-right: 20px;
+    filter: brightness(0);
+}
+.article-main h2{
+    margin: 0;
+    border-bottom: 5px solid rgb(40, 155, 183);
+}
+.article-theme{
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+.article-theme-img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    width: 600px;
+    height: 360px;
+    box-shadow: 1px 1px 3px 3px yellowgreen;
+}
+.box-sd-orange{
+    box-shadow: 1px 1px 3px 3px orange;
+}
+.box-sd-grey{
+    box-shadow: 1px 1px 3px 3px rgb(177, 177, 177);
+}
+.article-article{
+    margin: 60px;
+}
+main p{
+    font-family: "Noto+Serif+JP";
+    font-weight: 400;
+}
+.article-table{
+    background: #fff6e6;
+    border: dashed 2px rgb(40, 155, 183);/*破線*/
+    border-radius: 9px;
+    box-shadow: 0px 0px 0px 15px #fff6e6;
+    margin-top: 50px;
+} 
+.article-table h3{
+    font-family: "Dela Gothic One", sans-serif;
+    font-weight: 200;
+    margin-left: 20px;
+}
+.article-table ul{
+    padding: 0.5em 0.5em 0.5em 2em;
+}
+.article-table li{
+    line-height: 1.5;
+    padding: 0.5em 0;
+}
+.article-topic{
+    margin-top: 50px;
+    padding: 0.4em 0.5em;/*文字の上下 左右の余白*/
+    color: white;/*文字色*/
+    background: rgb(164, 164, 164);/*背景色*/
+    border-left: solid 5px #0084ff;/*左線*/
+    border-bottom: solid 3px black;/*下線*/
+}
+.article-topic h3{
+    margin-left: 20px;
+    font-size: 25px;
+    text-shadow:
+            3px 3px 3px #000, -3px -3px 3px #000,
+           -3px 3px 3px #000,  3px -3px 3px #000,
+            3px 0px 3px #000, -3px -0px 3px #000,
+            0px 3px 3px #000,  0px -3px 3px #000;
+}
+.article-table img{
+    width: 57.5px;
+    height: 57.5px;
+    filter: brightness(0);
+}
+.article-table-set{
+    justify-content: center;
+    margin-left: 230px;
+    border-bottom: 5px solid rgb(40, 155, 183);
+    width: 210px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: yellow;
+    border-radius: 20px;
+}
+.sentence{
+    line-height: 2;
+    margin-top: 30px;
+}
+.topic-m{
+    position: relative;
+    padding: 0.6em;
+    background: #a4caff;
+    margin-top: 60px;
+}
+.topic-s{
+    margin: 30px 0;
+    border-bottom: 2px dashed #adcfff;
+    border-top: 2px dashed #adcfff;
+    padding: 10px;
+    background-color: #fff6e6;
+}
+.topic-m:after{
+    position: absolute;
+    content: '';
+    top: 100%;
+    left: 30px;
+    border: 15px solid transparent;
+    border-top: 15px solid #a4caff;
+    width: 0;
+    height: 0;
+}
+.red{
+    color: red;
+}
+.blue{
+    color: rgb(50, 125, 255);
+}
+.green{
+    color: green;
+}
+.back-bord{
+    background-color: #f1ff85;
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: 1px 1px 3px 3px rgba(71, 71, 71, 0.777);
+    padding: 10px;
+}
+.back-bord2{
+    background-color: #f991e8;
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: 1px 1px 3px 3px rgba(71, 71, 71, 0.777);
+    padding: 10px;
+}
+.list13 {
+    position: relative;
+    margin: 3em 0 1em 0;
+    background: #fff6e6;
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.579);
+}
+.list13 a{
+    color: black;
+}
+.list13-title {
+    font-size: 1.15em;
+    padding: 4px 0 4px 25px;
+    color: #4090ff;
+    font-weight:bold;
+    border-bottom: 2px solid black;
+}
+.list13:after {
+    position: absolute;
+    content: "";
+    top: 25px;
+    width: 30%;
+    height: 35px;
+    opacity: 0.3;
+    margin: -35px auto 10px 35%;
+    background: #4090ff;
+    transform: rotate(-2deg);
+    left: 10px;
+    right: 10px;
+}
+.list13 ol {
+    position: relative;
+    margin: 0;
+    padding: 0 0.5em 0 0.5em;
+    color: black;
+    border: none;
+    list-style-type: none;
+}
+.list13 ol {
+    counter-reset: number;
+}
+.list13 ol li {
+    line-height: 1.5;
+    padding: 0.5em 0 0.5em 1.6em;
+    border-bottom: dashed 1px #4090ff;
+}
+.list13 ul li:before {
+    position: absolute;
+    font-family: FontAwesome;
+    content: "\f14a";
+    left : 0.7em;
+    color: #4090ff;
+}
+.list13 ol li:before {
+    display: inline-block;
+    position: absolute;
+    font-family: "Quicksand", sans-serif;
+    content: counter(number);
+    counter-increment: number;
+    left: 0.5em;
+    width: 22px;
+    height: 22px;
+    border-radius: 20%;
+    background: #4090ff;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 22px;
+}
+.list13 ul li:last-of-type,.list13 ol li:last-of-type{
+    border-bottom: none;
+}
+.maru-container{
+    margin-top: 50px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-left: 4px solid #4090ff;
+    background-color: #fff6e6;
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.579);
+}
+.maru{
+    width: 24px;
+    height: 24px;
+    padding-left: 10px;
+}
+.maru-h4{
+    padding-left: 10px;
+}
+.font-big{
+    font-size: 40px;
+}
+.all-articles{
+    margin-top: 30px;
+    margin-bottom: 70px;
+}
+.all-articles a{
+    background-color: black;
+    color: white;
+    padding: 7px;
+    border-radius: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.all-articles a:hover {
+    background-color: white;
+    color: black;
+}
+.next{
+    margin: 30px auto;
+
+}
+.schedule{
+    margin: 50px auto 0 auto;
+    border-collapse: collapse;
+}
+.schedule tr{
+    border-bottom: 1px solid black;
+}
+.schedule tr:nth-child(odd){
+    background-color: #f3f3f3;
+}
+.schedule tr:nth-child(even){
+    background-color: #dadada;
+}
+.schedule th{
+    padding: 15px;
+}
+.schedule td{
+    padding: 0 15px;
+}
+ul.sample1{
+    position: relative;
+    padding: 15px 15px 15px 30px;
+    border: solid 2px #adcce8;
+    border-radius:8px;
+    color: #448ccb;
+    background: #fff;
+    margin: 50px auto;
+}
+ul.sample1:before{
+    content: "まとめ";  /* 好きな文字を記述 */
+    position: absolute;
+    display: block;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 0 10px;
+}
+ul.sample1 li{
+    font-weight: bold;
+    color: black;
+    padding: 7px;
+}
+.hover-big-green{
+    transition: .3s;
+}
+.hover-big-green:hover{
+    transform: scale(1.1);
+}
+.hover-big-green li:hover{
+    background-color: green;
+    color: white;
+}
+.hover-big-green:hover .white{
+    color: yellow;
+}
+.article-container{
+    display: flex;
+}
+.youtube-blog-wrap{
+    margin: 40px auto;
+    width: 560px;
+}
+.shop{
+    margin: 20px auto;
+}
+.unique-bmi-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.571);
+}
+
+.unique-bmi-title {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+    color: #333;
+}
+
+.unique-bmi-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.unique-bmi-label {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.unique-bmi-input,
+.unique-bmi-select {
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.unique-bmi-button {
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.unique-bmi-button:hover {
+    background-color: #45a049;
+}
+
+.unique-bmi-result {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.unique-bmi-result p {
+    font-size: 18px;
+    color: #333;
+}
+.bmi-result {
+    color: red;
+    font-weight: bold;
+    font-size: 30px;
+}
+.bmi{
+    font-size: 20px;
+    border: 3px solid green;
+    padding: 10px 30px;
+    text-align: center;
+    font-weight: 700;
+    margin: 30px auto;
+}
+.grey{
+    color: grey;
+}
+.bmi-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0 auto;
+    overflow-x: auto; /* 横スクロールを許可 */
+    display: block;
+}
+.bmi-table th, .bmi-table td {
+    border: 1px solid #9e9e9e62; /* 黒いボーダー */
+    padding: 8px;
+    text-align: center; /* 中央揃え */
+    white-space: nowrap;
+}
+.bmi-table th {
+    background-color: #f4f4f4; /* ヘッダーの背景色 */
+}
+.inside{
+    list-style-position: inside;
+}
+.inside li{
+    margin-top: 20px;
+}
+.red-b{
+    color: rgb(255, 63, 63);
+    text-shadow: 1px 0 1px #000, 0 1px 1px #000, -1px 0 1px #000, 0 -1px 1px #000;
+}
+.blue-b{
+    color: rgb(18, 168, 255);
+    text-shadow: 1px 0 1px #000, 0 1px 1px #000, -1px 0 1px #000, 0 -1px 1px #000;
+}
+.green-b{
+    color: rgb(0, 255, 0);
+    text-shadow: 1px 0 1px #000, 0 1px 1px #000, -1px 0 1px #000, 0 -1px 1px #000;
+}
+.yellow-b{
+    color: yellow;
+    text-shadow: 1px 0 1px #000, 0 1px 1px #000, -1px 0 1px #000, 0 -1px 1px #000;
+}
+.blog-img{
+    margin: 20px auto;
+}

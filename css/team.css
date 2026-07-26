@@ -1,0 +1,155 @@
+@charset 'UTF-8';
+.h3-img{
+    width: 35px;
+    height: 35px;
+    object-fit: cover;
+    filter: brightness(0) invert(1);
+    margin: auto 1rem auto 0;
+}
+.team-nav{
+    border-bottom: 7px solid yellow;
+}
+.team{
+    color: yellow;
+}
+.indiv{
+    color: white;
+}
+.column{
+    color: white;
+}
+.main-nav a {
+    font-family: "Reggae One", system-ui;
+    font-weight: 400;
+    font-style: normal;
+}
+/* コンテンツチーム */
+.tact h3{
+    padding: 0 2% 0 2%;
+}
+.sort-tact{
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+.attack-tact, .defence-tact{
+    width: 500px;
+    cursor: pointer;
+}
+.extra-tact{
+    cursor: pointer;
+}
+.tact-theme{
+    position: relative;
+    cursor: pointer;
+}
+.tact-theme-button{
+    position: absolute;
+    right: 20px;
+    width: 52px;
+    height: 52px;
+    background-color: green;
+    border-radius: 50%;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+.sort-tact-button{
+    position: absolute;
+    right: 20px;
+}
+.tact-list-left{
+    border-right: 2px solid black;
+}
+.tact-list-left h3{
+    align-items: flex-start;
+    color: black;
+}
+.tact-list-left p{
+    align-items: flex-start;
+}
+.attack-text, .defence-text{
+    color: white;
+    pointer-events: none;
+}
+.youtube-wrap{
+    margin: auto;
+}
+.youtube-wrap{
+    width: 45%;
+}
+.youtube{
+    padding-top: 56.25%;
+    width: 100%;
+    position: relative;
+}
+.youtube iframe{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+.menu-name{
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    padding: .5rem 0;
+    margin: 0 auto;
+    text-align: center;
+    width: 80%;
+}
+.menu-attack{
+    background-color: rgba(255, 58, 58, 0.714);
+}
+.menu-defence{
+    background-color: rgba(69, 190, 255, 0.698);
+}
+.menu-icon{
+    filter: drop-shadow(2px 2px 3px rgb(85, 85, 85));
+    margin-right: 20px;
+    width: 35px;
+    height: 35px;
+    align-items: center;
+}
+.menu-detail{
+    margin-top: 10px;
+    border-bottom: 2px dashed rgba(0, 0, 0, 0.365);
+    background-color: white;
+}
+.menu-text p{
+    font-size: 18px;
+}
+.link{
+    text-decoration: underline;
+}
+/* アコーディオン */
+.toggle-button{
+    color: black;
+    text-shadow: 1px 1px 1px rgb(95, 95, 95);
+    box-shadow: inset 0 2px 0 rgba(255,255,255,0.5), 0 2px 2px rgba(0, 0, 0, 0.19);
+    background-color: rgb(231, 231, 231);
+    border-bottom: solid 2px #b5b5b5;
+    overflow: hidden;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    cursor: pointer;
+    font-weight: normal;
+}
+.toggle-button:hover{
+    background-color: rgb(101, 101, 101);
+}
+.accordion-content{
+    display: none;
+    overflow: hidden;
+}
+.accordion-content.open{
+    display: block;
+}
+.sort-tact-button{
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    top: 0;
+    overflow: hidden;
+    text-shadow: 1px 1px 1px rgb(95, 95, 95);
+    box-shadow: inset 0 2px 0 rgba(255,255,255,0.5), 0 2px 2px rgba(0, 0, 0, 0.19);
+    border-bottom: solid 2px #b5b5b5;
+    font-size: 33px;
+}

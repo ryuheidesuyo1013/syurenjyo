@@ -1,0 +1,471 @@
+@charset 'UTF-8';
+/* スマホ画面向け */
+@media (max-width: 767px) {
+    /* スマホ向けのスタイル */
+    header{
+        margin-bottom: 40px;
+    }
+    h2{
+        font-size: 20px;
+        margin: 30px 0;
+    }
+    h3{
+        font-size: 25px;
+    }
+    h4{
+        font-size: 10px;
+    }
+    .content-top{
+        margin: auto 20px auto 20px;
+        width: auto;
+    }
+    .content-top img{
+        width: 20vw;
+        margin: auto 0 auto 0;
+    }
+    .tact-list{
+        padding: 10px 0;
+        display: block;
+    }
+    .tact-list ul{
+        margin-left: 15%;
+    }
+    .sort-tact{
+        font-size: 17px;
+        margin: 7px 0 7px 0;
+    }
+    .sort-tact-img{
+        width: 25px;
+        height: 25px;
+    }
+    .extra-tact-img{
+        width: 25px;
+        height: 25px;
+    }
+    .attack-tact, .defence-tact, .extra-tact{
+        width: 300px;
+    }
+    .sort-tact-button{
+        width: 37px;
+        height: 37px;
+        font-size: 30px;
+    }
+    .tact-theme-button{
+        width: 37px;
+        height: 37px;
+    }
+    .tact-list ul{
+        text-align: center;
+    }
+    .tact-list h3{
+        font-size: 15px;
+    }
+    .tact-list-left{
+        border-right: none;
+        width: 90%;
+        padding-bottom: 5px;
+        margin: 0 auto 10px auto;
+        border-bottom: 2px solid black;
+    }
+    .menu-text{
+        padding: .3rem 0;
+    }
+    .menu-icon{
+        width: 20px;
+        height: 20px;
+    }
+    .menu-text p{
+        margin: 0;
+        font-size: 13px;
+    }
+    .youtube-wrap{
+        width: 90%;
+    }
+    .youtube{
+        padding-top: 56.25%;
+        width: 100%;
+        position: relative;
+    }
+    .youtube iframe{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+    .uniform{
+        width: 25px;
+        height: 25px;
+    }
+    .logo{
+        width: 100px;
+        height: 50px;
+        margin-top: 10px;
+    }
+    .footer-container{
+        width: 100%;
+        text-align: center;
+        height: 70px;
+    }
+    .footer-items a{
+        font-size: 10px;
+    }
+    .footer-item{
+        margin: auto 5px;
+    }
+    .page-footer{
+        margin-top: 60px;
+    }
+    .footer-logo{
+        padding: 0;
+        width: 50px;
+        height: 25px;
+        position: static;
+        margin: auto 10px;
+    }
+    .footer-items{
+        align-items: center;
+    }
+    .article-item{
+        width: 370px;
+    }
+    .article-item h3{
+        margin-right: 28px;
+        font-size: 20px;
+    }
+    .article-item img{
+        width: 35px;
+        height: 35px;
+    }
+    .article-img{
+        margin-right: 20px;
+        align-items: flex-start;
+    }
+    .list-container a{
+        margin: 10px;
+        font-size: 20px;
+    }
+    .article-box{
+        width: 370px;
+        height: auto;
+        margin: 20px auto;
+    }
+    .article-box h3{
+        margin: 10px auto;
+    }
+    .article-box-img{
+        width: 130px;
+        height: 78px;
+    }
+    .article-items{
+        width: 150px;
+        margin: 10px;
+    }
+    .blackboard-box{
+        width: 130px;
+        height: 60px;
+        margin: 5px auto;
+        padding: 8px;
+    }
+    .blackboard-box p{
+        font-size: 8px;
+    }
+    .tact-list span{
+        font-size: 13px;
+    }
+    .tact-list{
+        line-height: 1.2; 
+        letter-spacing: 0.03em;
+    }
+    .h2-img{
+        width: 29px;
+        height: 29px;
+    }
+    .contact{
+        width: 350px;
+    }
+    .contact-ttl{
+        font-size: 20px;
+    }
+    .catch-copy{
+        font-size: 40px;
+        margin: 50px auto;
+    }
+    .catch-box{
+        width: 300px;
+    }
+    .catch-box p{
+        font-size: 15px;
+        line-height: 30px;
+    }
+    .catch-box-container{
+        display: block;
+    }
+    .article-theme{
+        padding-top: 30px;
+    }
+    .article-theme h2{
+        font-size: 17px;
+    }
+    .article-theme-img{
+        width: 300px;
+        height: 180px;
+    }
+    .article-article{
+        margin: 30px;
+        padding-bottom: 20px;
+    }
+    .article-main{
+        width: 350px;
+        margin: 20px auto;
+    }
+    .article-container{
+        display: block;
+    }
+    .all-articles{
+        margin: 20px auto;
+    }
+    .content-team h2{
+        margin: 40px 0 20px 0;
+    }
+    .content-indiv h2{
+        margin: 40px 0 20px 0;
+    }
+    /*目次*/
+    .article-table img{
+        width: 37px;
+        height: 37px;
+    }
+    .article-table-set{
+        margin: 10px auto;
+        width: 150px;
+    }
+    .article-table ul{
+        padding: 0.5em 0.5em 0.5em 0.5em;
+        font-size: 13px;
+    }
+    .article-topic{
+        margin-top: 25px;
+    }
+    .topic-m{
+        margin-top: 20px;
+    }
+    .sentence{
+        margin-top: 10px;
+    }
+    .article-topic h3{
+        font-size: 18px;
+        margin-left: 10px;
+    }
+    .article-article p{
+        font-size: 10px;
+    }
+    .topic-m, .topic-s{
+        font-size: 12px;
+    }
+    .list13-title{
+        font-size: 13px;
+    }
+    .maru-container{
+        font-size: 15px;
+        margin-top: 20px;
+        height: 35px;
+        align-items: center;
+    }
+    .maru{
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        margin-left: 10px;
+    }
+    .inside li{
+        font-size: 11px;
+    }
+    .list13-title{
+        font-size: 13px;
+    }
+    .list13 a{
+        font-size: 13px;
+    }
+    .article-sub{
+        margin: 0 auto;
+        width: 350px;
+    }
+    .bmi-table {
+        font-size: 10px; /* 表全体のフォントサイズを縮小 */
+    }
+    .bmi-table th, .bmi-table td {
+        width: 100%; /* セルを幅いっぱいに広げる */
+    }
+    .bmi-table tr {
+        margin-bottom: 10px; /* 行間に余白を追加 */
+    }
+    .bmi-table th {
+        font-weight: bold; /* ヘッダーセルを強調 */
+    }
+    .unique-bmi-container{
+        margin: 30px auto;
+        padding: 10px;
+    }
+    .unique-bmi-title {
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+    .unique-bmi-label{
+        font-size: 10px;
+        margin-bottom: 5px;
+    }
+    .unique-bmi-input, .unique-bmi-select{
+        margin-bottom: 10px;
+        padding: 5px;
+        font-size: 10px;
+    }
+    .unique-bmi-button{
+        padding: 6px;
+    }
+    .unique-bmi-result p{
+        font-size: 15px;
+    }
+    .bmi{
+        font-size: 10px;
+        border: 1px solid green;
+        padding: 5px 10px;
+        text-align: center;
+        font-weight: 700;
+        margin: 20px auto;
+    }
+    .article-topic h3{
+        font-size: 15px;
+    }
+    .youtube-blog-wrap{
+        margin: 20px auto;
+        width: 300px;
+    }
+    .youtube-blog-wrap iframe{
+        width: 290px;
+        height: auto;
+    }
+    .font-big{
+        font-size: 20px;
+    }
+    .schedule{
+        font-size: 10px;
+        margin: 20px auto;
+    }
+    .cat-cul{
+        width: 300px;
+    }
+    .cat-cul img{
+        width: 35px;
+        height: 35px;
+    }
+    .PR-sc{
+        display: block;
+    }
+    .PR{
+        margin-right: 5px;
+        font-size: 15px;
+        width: 110px;
+    }
+    .PR-side{
+        margin: 20px auto;
+    }
+    .PR-wide{
+        margin: 0 auto;
+    }
+    .h3-img{
+        width: 23px;
+        height: 23px;
+    }
+}
+/* タブレット画面向け */
+@media (min-width: 768px) and (max-width: 1023px) {
+    /* タブレット向けのスタイル */
+    h2{
+        margin: 30px 0;
+    }
+    .tact-list ul{
+        margin-left: 15%;
+        text-align: center;
+    }
+    .tact-list h3{
+        font-size: 15px;
+    }
+    .tact-list-left{
+        width: 50%;
+    }
+    .menu-text h3{
+        font-size: 15px;
+    }
+    .menu-text p{
+        margin: 0;
+        font-size: 13px;
+    }
+    .menu-text{
+        padding: .5rem 18px;
+    }
+    .menu-icon{
+        width: 18px;
+        height: 18px;
+    }
+    .youtube-wrap{
+        width: 50%;
+    }
+    .youtube{
+        padding-top: 56.25%;
+        width: 100%;
+        position: relative;
+    }
+    .youtube iframe{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+    .article-item{
+        width: 700px;
+    }
+    .article-item img{
+        width: 50px;
+        height: 50px;
+    }
+    .article-box{
+        width: 700px;
+        margin: 20px auto;
+    }
+    .contact{
+        width: 700px;
+    }
+    .catch-box{
+        width: 400px;
+    }
+    .article-main{
+        width: 700px;
+        margin: 0 auto;
+    }
+    .article-sub{
+        width: 700px;
+        margin: 0 auto;
+    }
+    .article-container{
+        display: block;
+    }
+    .article-article{
+        margin: 30px;
+        padding-bottom: 20px;
+    }
+    .article-theme-img{
+        width: 500px;
+    }
+    .hamburger-demo-menubox{
+        display: none;
+    }
+}
+/* パソコン全般向け */
+@media (min-width: 1024px) {
+    /* パソコン全般向けのスタイル */
+    .menu-text{
+        padding: 1rem 75px;
+    }
+}
