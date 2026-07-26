@@ -1,0 +1,21 @@
+# Environment variables
+.env
+*.env
+
+# Dependencies
+/vendor/
+/node_modules/
+
+# Editor settings
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
