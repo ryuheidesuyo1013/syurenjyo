@@ -1,6 +1,6 @@
 # 蹴練場（Syurenjyo）
 
-images/syurenjyo-ss.png
+![画像]images/syurenjyo-ss.png
 
 サッカー選手・指導者・保護者に向けて、技術・戦術・トレーニング・進路などの情報を発信するWebサイトです。
 
