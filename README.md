@@ -25,6 +25,7 @@ https://蹴練場.jp/
 * HTML
 * CSS
 * JavaScript
+* Sass(SCSS)
 
 ### バックエンド
 
@@ -59,6 +60,7 @@ https://蹴練場.jp/
 ├── articles/        記事ページ
 ├── article-img/     記事サムネイル用画像
 ├── css/             スタイルシート
+├── scss/            cssにコンパイル
 ├── images/          サイト画像
 ├── js/              JavaScript
 ├── fonts/           Webフォント
