@@ -1,0 +1,41 @@
+@use "variables" as v;
+
+// ==============================
+// フォーム部品
+// ==============================
+
+@mixin form-control {
+  padding: 10px;
+  border: 1px solid v.$border-color;
+  border-radius: v.$radius-small;
+  background-color: v.$white;
+  font: inherit;
+}
+
+// ==============================
+// ホバー
+// ==============================
+
+@mixin hover-opacity($opacity: 0.8) {
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: $opacity;
+  }
+}
+
+// ==============================
+// レスポンシブ
+// ==============================
+
+@mixin media-tablet {
+  @media screen and (max-width: v.$breakpoint-tablet) {
+    @content;
+  }
+}
+
+@mixin media-mobile {
+  @media screen and (max-width: v.$breakpoint-mobile) {
+    @content;
+  }
+}

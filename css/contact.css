@@ -9,11 +9,13 @@ body {
 
 .contact {
   width: 960px;
+  max-width: calc(100% - 40px);
   margin: 0 auto;
   padding: 60px 0;
 }
 .contact-ttl {
   margin-bottom: 40px;
+  padding: 10px 20px;
   border-radius: 20px;
   background-color: green;
   color: #fff;
@@ -24,6 +26,7 @@ body {
 .contact-table {
   width: 100%;
   margin-bottom: 20px;
+  border-collapse: collapse;
   background-color: #fff;
 }
 .contact-item, .contact-body {
@@ -34,6 +37,7 @@ body {
   width: 30%;
   background-color: #eee;
   text-align: left;
+  vertical-align: middle;
 }
 .contact-body {
   width: 70%;
@@ -41,6 +45,7 @@ body {
 .contact-submit {
   display: block;
   width: 250px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 15px;
   border: none;
@@ -53,28 +58,57 @@ body {
      -moz-appearance: none;
           appearance: none;
   cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 .contact-submit:hover {
   opacity: 0.8;
 }
+.contact-submit:focus-visible {
+  outline: 3px solid #0077cc;
+  outline-offset: 3px;
+}
 
-.form-text {
+.form-text,
+.form-textarea {
   width: 100%;
-  max-width: 400px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  background-color: #fff;
+  font: inherit;
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
 }
+.form-text:focus,
+.form-textarea:focus {
+  border-color: #0077cc;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 119, 204, 0.2);
+}
+
+.form-text {
+  max-width: 400px;
+}
 
 .form-select {
   width: 180px;
+  max-width: 100%;
   height: 40px;
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  background-color: #fff;
+}
+.form-select:focus {
+  border-color: #0077cc;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 119, 204, 0.2);
+}
+
+.form-textarea {
+  height: 200px;
+  resize: vertical;
 }
 
 select {
@@ -86,18 +120,51 @@ select::-ms-expand {
   display: block;
 }
 
-.form-textarea {
-  width: 100%;
-  height: 200px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
-}
-
 .red {
   color: red;
+}
+
+@media screen and (max-width: 768px) {
+  .contact {
+    padding: 40px 0;
+  }
+  .contact-ttl {
+    margin-bottom: 30px;
+    font-size: 32px;
+  }
+  .contact-item, .contact-body {
+    padding: 15px;
+  }
+}
+@media screen and (max-width: 600px) {
+  .contact {
+    max-width: calc(100% - 30px);
+    padding: 30px 0;
+  }
+  .contact-ttl {
+    margin-bottom: 20px;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 26px;
+  }
+  .contact-table, .contact-table tbody, .contact-table tr, .contact-item, .contact-body {
+    display: block;
+    width: 100%;
+  }
+  .contact-table tr {
+    margin-bottom: 20px;
+  }
+  .contact-item {
+    border-bottom: none;
+  }
+  .contact-submit {
+    width: 100%;
+  }
+  .form-text {
+    max-width: none;
+  }
+  .form-select {
+    width: 100%;
+  }
 }
 /*# sourceMappingURL=contact.css.map */

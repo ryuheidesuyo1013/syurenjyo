@@ -1,22 +1,18 @@
 @charset "UTF-8";
 
-// ==============================
-// 変数
-// ==============================
+@use "foundation/variables" as v;
+@use "foundation/mixins" as m;
 
-$text-color: #333;
-$white: #fff;
-$border-color: #ccc;
-$background-light: #eee;
-$title-background: green;
-$required-color: red;
+// ==============================
+// 共通設定
+// ==============================
 
 * {
   box-sizing: border-box;
 }
 
 body {
-  color: $text-color;
+  color: v.$text-color;
   font-family:
     "Helvetica Neue",
     Arial,
@@ -26,16 +22,22 @@ body {
     sans-serif;
 }
 
+// ==============================
+// お問い合わせページ
+// ==============================
+
 .contact {
-  width: 960px;
+  width: v.$contact-width;
+  max-width: calc(100% - 40px);
   margin: 0 auto;
   padding: 60px 0;
 
   &-ttl {
     margin-bottom: 40px;
-    border-radius: 20px;
-    background-color: $title-background;
-    color: $white;
+    padding: 10px 20px;
+    border-radius: v.$radius-large;
+    background-color: v.$title-background;
+    color: v.$white;
     font-size: 40px;
     font-weight: bold;
     text-align: center;
@@ -44,19 +46,21 @@ body {
   &-table {
     width: 100%;
     margin-bottom: 20px;
-    background-color: $white;
+    border-collapse: collapse;
+    background-color: v.$white;
   }
 
   &-item,
   &-body {
     padding: 20px;
-    border: 1px solid $border-color;
+    border: 1px solid v.$border-color;
   }
 
   &-item {
     width: 30%;
-    background-color: $background-light;
+    background-color: v.$background-light;
     text-align: left;
+    vertical-align: middle;
   }
 
   &-body {
@@ -66,38 +70,69 @@ body {
   &-submit {
     display: block;
     width: 250px;
+    max-width: 100%;
     margin: 0 auto;
     padding: 15px;
     border: none;
-    border-radius: 100vh;
-    background-color: $text-color;
-    color: $white;
+    border-radius: v.$radius-pill;
+    background-color: v.$text-color;
+    color: v.$white;
     font-size: 16px;
     font-weight: bold;
     appearance: none;
     cursor: pointer;
 
-    &:hover {
-      opacity: 0.8;
+    @include m.hover-opacity;
+
+    &:focus-visible {
+      outline: 3px solid v.$focus-color;
+      outline-offset: 3px;
     }
   }
 }
 
-.form-text {
+// ==============================
+// フォーム部品
+// ==============================
+
+.form-text,
+.form-textarea {
   width: 100%;
-  max-width: 400px;
-  padding: 10px;
-  border: 1px solid $border-color;
-  border-radius: 5px;
+
+  @include m.form-control;
+
   appearance: none;
+
+  &:focus {
+    border-color: v.$focus-color;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(v.$focus-color, 0.2);
+  }
+}
+
+.form-text {
+  max-width: 400px;
 }
 
 .form-select {
   width: 180px;
+  max-width: 100%;
   height: 40px;
   padding: 5px;
-  border: 1px solid $border-color;
-  border-radius: 5px;
+  border: 1px solid v.$border-color;
+  border-radius: v.$radius-small;
+  background-color: v.$white;
+
+  &:focus {
+    border-color: v.$focus-color;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(v.$focus-color, 0.2);
+  }
+}
+
+.form-textarea {
+  height: 200px;
+  resize: vertical;
 }
 
 select {
@@ -108,15 +143,69 @@ select {
   }
 }
 
-.form-textarea {
-  width: 100%;
-  height: 200px;
-  padding: 10px;
-  border: 1px solid $border-color;
-  border-radius: 5px;
-  appearance: none;
+.red {
+  color: v.$required-color;
 }
 
-.red {
-  color: $required-color;
+// ==============================
+// レスポンシブ
+// ==============================
+
+@include m.media-tablet {
+  .contact {
+    padding: 40px 0;
+
+    &-ttl {
+      margin-bottom: 30px;
+      font-size: 32px;
+    }
+
+    &-item,
+    &-body {
+      padding: 15px;
+    }
+  }
+}
+
+@include m.media-mobile {
+  .contact {
+    max-width: calc(100% - 30px);
+    padding: 30px 0;
+
+    &-ttl {
+      margin-bottom: 20px;
+      padding: 8px 15px;
+      border-radius: v.$radius-small;
+      font-size: 26px;
+    }
+
+    &-table,
+    &-table tbody,
+    &-table tr,
+    &-item,
+    &-body {
+      display: block;
+      width: 100%;
+    }
+
+    &-table tr {
+      margin-bottom: 20px;
+    }
+
+    &-item {
+      border-bottom: none;
+    }
+
+    &-submit {
+      width: 100%;
+    }
+  }
+
+  .form-text {
+    max-width: none;
+  }
+
+  .form-select {
+    width: 100%;
+  }
 }
