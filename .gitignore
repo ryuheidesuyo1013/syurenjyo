@@ -1,5 +1,5 @@
 # Environment variables
-.env
+/.env
 *.env
 
 # Dependencies
@@ -22,3 +22,6 @@ Desktop.ini
 
 # PowerPoint
 *.pptx
+
+/uploads/thumbnails/*
+!/uploads/thumbnails/.gitkeep
