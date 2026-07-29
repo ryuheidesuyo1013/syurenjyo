@@ -25,10 +25,12 @@ $articles = $stmt->fetchAll();
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
+
     <title>記事管理｜蹴練場 管理画面</title>
 </head>
 
@@ -47,7 +49,7 @@ $articles = $stmt->fetchAll();
         <?php if ($articles === []): ?>
             <p>登録されている記事はありません。</p>
         <?php else: ?>
-            <table>
+            <table border="1">
                 <thead>
                     <tr>
                         <th>タイトル</th>
@@ -62,8 +64,13 @@ $articles = $stmt->fetchAll();
                 <tbody>
                     <?php foreach ($articles as $article): ?>
                         <tr>
-                            <td><?= escape($article['title']) ?></td>
-                            <td><?= escape($article['category']) ?></td>
+                            <td>
+                                <?= escape($article['title']) ?>
+                            </td>
+
+                            <td>
+                                <?= escape($article['category']) ?>
+                            </td>
 
                             <td>
                                 <?= $article['status'] === 'published'
@@ -80,9 +87,28 @@ $articles = $stmt->fetchAll();
                             </td>
 
                             <td>
-                                <a href="article-edit.php?id=<?= (int) $article['id'] ?>">
+                                <a
+                                    href="article-edit.php?id=<?= (int) $article['id'] ?>"
+                                >
                                     編集
                                 </a>
+
+                                <form
+                                    method="post"
+                                    action="article-delete.php"
+                                    style="display: inline;"
+                                    onsubmit="return confirm('この記事を削除しますか？');"
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="id"
+                                        value="<?= (int) $article['id'] ?>"
+                                    >
+
+                                    <button type="submit">
+                                        削除
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     <?php endforeach; ?>
