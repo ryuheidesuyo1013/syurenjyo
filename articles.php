@@ -55,11 +55,13 @@ $articles = $stmt->fetchAll();
                     </p>
 
                     <h2>
-                        <?= htmlspecialchars(
-                            $article['title'],
-                            ENT_QUOTES,
-                            'UTF-8'
-                        ) ?>
+                        <a href="article.php?slug=<?= urlencode($article['slug']) ?>">
+                            <?= htmlspecialchars(
+                                $article['title'],
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>
+                        </a>
                     </h2>
 
                     <p>
