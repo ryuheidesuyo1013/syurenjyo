@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/helpers.php';
+require_once __DIR__ . '/../src/auth.php';
+
+requireAdminLogin();
 
 $sql = '
     SELECT
@@ -37,7 +40,14 @@ $articles = $stmt->fetchAll();
 <body>
     <main>
         <h1>記事管理</h1>
+        <p>
+            ログイン中：
+            <?= escape($_SESSION['admin_username'] ?? '') ?>
+        </p>
 
+        <form method="post" action="logout.php">
+            <button type="submit">ログアウト</button>
+        </form>
         <p>
             <a href="article-create.php">新しい記事を作成</a>
         </p>
