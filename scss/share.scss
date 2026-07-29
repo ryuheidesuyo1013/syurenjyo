@@ -1,0 +1,793 @@
+@charset "UTF-8";
+
+@use "foundation/variables" as v;
+@use "foundation/mixins" as m;
+
+// ==============================
+// フォント
+// ==============================
+
+@font-face {
+  font-family: "Noto Sans JP";
+  src: url("../fonts/NotoSansJP-VariableFont_wght.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Reggae One";
+  src: url("../fonts/ReggaeOne-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Noto Serif JP";
+  src: url("../fonts/NotoSerifJP-VariableFont_wght.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Dela Gothic One";
+  src: url("../fonts/DelaGothicOne-Regular.woff2") format("woff2");
+}
+
+// ==============================
+// 基本設定
+// ==============================
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: v.$accent-color v.$scrollbar-track-color;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  color: v.$body-text-color;
+  font-family: sans-serif;
+  line-height: 1.5;
+
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 25px,
+      v.$grid-line-color 26px,
+      v.$grid-line-color 26px,
+      transparent 27px,
+      transparent 51px,
+      v.$grid-line-color 52px,
+      v.$grid-line-color 52px,
+      transparent 53px,
+      transparent 77px,
+      v.$grid-line-color 78px,
+      v.$grid-line-color 78px,
+      transparent 79px,
+      transparent 103px,
+      v.$grid-line-color 104px,
+      v.$grid-line-color 104px,
+      transparent 105px,
+      transparent 129px,
+      v.$grid-line-color 130px,
+      v.$grid-line-color 130px
+    ),
+    repeating-linear-gradient(
+      to right,
+      transparent 25px,
+      v.$grid-line-color 26px,
+      v.$grid-line-color 26px,
+      transparent 27px,
+      transparent 51px,
+      v.$grid-line-color 52px,
+      v.$grid-line-color 52px,
+      transparent 53px,
+      transparent 77px,
+      v.$grid-line-color 78px,
+      v.$grid-line-color 78px,
+      transparent 79px,
+      transparent 103px,
+      v.$grid-line-color 104px,
+      v.$grid-line-color 104px,
+      transparent 105px,
+      transparent 129px,
+      v.$grid-line-color 130px,
+      v.$grid-line-color 130px
+    );
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+}
+
+p {
+  font-family: "Noto Sans JP", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+// ==============================
+// ユーティリティ
+// ==============================
+.block{
+    display: block;
+}
+.flex {
+    display: flex;
+}
+.inline{
+    display: inline-block;
+}
+.float-right{
+    float: right;
+}
+.flex-space-around {
+    justify-content: space-around;
+}
+.align-center{
+    align-items: center;
+}
+.text-center{
+    text-align: center;
+}
+.content-center{
+    justify-content: center;
+}
+.space-between{
+    justify-content: space-between;
+}
+.text-hover {
+  transition:
+    color 0.4s,
+    transform 0.4s;
+
+  &:hover {
+    color: v.$accent-color;
+    transform: scale(1.05);
+  }
+}
+.absolute{
+    position: absolute;
+}
+.relative{
+    position: relative;
+}
+.w100{
+    width: 100%;
+}
+.w50{
+    width: 50%;
+}
+h2{
+    font-family: "Reggae One", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 28px;
+    justify-content: center;
+    align-items: center;
+}
+h3{
+    font-size: 35px;
+    font-family: "Noto Serif JP", serif;
+    font-weight: 900;
+    font-style: normal;
+}
+.list-none{
+    list-style: none;
+}
+/* コンテンツ */
+.h2-span {
+  padding: 10px 20px;
+  border-radius: v.$radius-large;
+  background-color: v.$primary-color;
+  color: v.$white;
+}
+
+.h2-span-span {
+  color: v.$accent-color;
+}
+
+.h2-img{
+    width: 35px;
+    height: 35px;
+    object-fit: cover;
+    filter: brightness(0) invert(1);
+    margin: auto 1rem auto auto;
+}
+.h3-img{
+    width: 35px;
+    height: 35px;
+    object-fit: cover;
+    filter: brightness(0) invert(1);
+    margin: auto 1rem auto 0;
+}
+// ==============================
+// チーム・戦術コンテンツ
+// ==============================
+
+.tact-theme {
+  border-radius: 10px;
+  background-color: v.$black;
+}
+
+.sort-tact {
+  position: relative;
+  justify-content: center;
+  color: v.$white;
+  font-family: "Reggae One", system-ui;
+  font-size: 23px;
+  font-weight: 900;
+  font-style: normal;
+  text-shadow: 2px 2px v.$black;
+
+  span {
+    padding: 0.3rem 0.8em;
+    border-radius: 30px;
+  }
+
+  &-img {
+    width: 38px;
+    margin-right: 0.3rem;
+    object-fit: cover;
+    filter: brightness(0);
+  }
+}
+
+.attack-tact {
+  background-color: rgb(255, 0, 0);
+  box-shadow: 3px 3px 1px v.$black;
+}
+
+.defence-tact {
+  background-color: rgb(53, 221, 255);
+  box-shadow: 3px 3px 1px v.$black;
+}
+
+.tact-list {
+  margin: 0 1rem 1rem;
+  padding: 10px 0;
+  border: 2px solid v.$black;
+  border-radius: 10px;
+  background-color: #f0ddddf9;
+  box-shadow: 2px 2px 3px v.$black;
+
+  ul {
+    padding-left: 0;
+    text-align: center;
+  }
+
+  a {
+    color: v.$black;
+    font-family: "Noto Serif JP", serif;
+    font-size: 20px;
+    font-weight: 600;
+    font-style: normal;
+  }
+
+  h3 {
+    font-size: 25px;
+  }
+}
+
+.attack,
+.defence,
+.extra {
+  text-shadow: 1px 1px v.$white;
+}
+
+.attack {
+  color: rgb(255, 0, 0);
+}
+
+.defence {
+  color: #00d5ff;
+}
+
+.extra {
+  color: rgb(0, 194, 0);
+}
+
+.uniform {
+  width: 38px;
+  margin-right: 0.3rem;
+}
+// ==============================
+// 強調表示
+// ==============================
+
+.under-line {
+  background-color: v.$accent-color;
+}
+
+.under-line2 {
+  background-color: rgba(255, 0, 255, 0.385);
+}
+
+.under-line3 {
+  background-color: rgba(255, 0, 0, 0.762);
+}
+
+.under-line4 {
+  background-color: rgb(0, 255, 0);
+}
+
+.under-line5 {
+  background-color: v.$white;
+}
+.border-bottom{
+    border-bottom: 3px solid v.$black;
+}
+.heighlight{
+    font-weight: 900;
+}
+.heighlight2{
+    font-weight: 600;
+}
+// ==============================
+// ヘッダー
+// ==============================
+
+header {
+  margin-bottom: 60px;
+}
+
+.page-header {
+  width: 100%;
+  background-color: v.$white;
+}
+
+.logo {
+  position: absolute;
+  top: 7.5px;
+  left: 50%;
+  width: 150px;
+  height: 75px;
+  object-fit: cover;
+  filter: drop-shadow(3px 3px 3px #616161);
+  transform: translateX(-50%);
+}
+
+.header {
+  &-top {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 90px;
+    background-color: v.$black;
+  }
+
+  &-bottom {
+    background-color: v.$primary-color;
+  }
+}
+
+// ==============================
+// ナビゲーション
+// ==============================
+
+.main-nav {
+  display: flex;
+
+  li {
+    font-size: 19px;
+  }
+
+  &-item {
+    display: flex;
+    gap: 1rem;
+    padding: 7px 20px;
+
+    img {
+      width: 30px;
+      height: 30px;
+      filter: brightness(0) invert(1);
+    }
+  }
+}
+// ==============================
+// フッター
+// ==============================
+
+.page-footer {
+  height: auto;
+  margin-top: 300px;
+}
+
+.footer {
+  &-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    height: 100px;
+    background-color: v.$primary-color;
+  }
+
+  &-logo {
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    width: 150px;
+    padding: 15px;
+    filter: drop-shadow(3px 3px 3px #616161);
+  }
+
+  &-items {
+    display: flex;
+    justify-content: center;
+
+    a {
+      color: v.$white;
+    }
+  }
+
+  &-item {
+    margin: 0 10px;
+    font-size: small;
+  }
+}
+
+.copy-right {
+  height: 50px;
+  background-color: v.$black;
+
+  p {
+    color: v.$white;
+  }
+}
+.footer-logo{
+    padding: 15px;
+}
+
+// ==============================
+// ハンバーガーメニュー
+// ==============================
+
+@media screen and (max-width: 767px) {
+  .header-bottom,
+  .input-hidden {
+    display: none;
+  }
+
+  .hamburger-demo {
+    &-switch {
+      position: absolute;
+      top: 10px;
+      left: 3%;
+      z-index: 9999;
+      width: 4em;
+      height: 4em;
+      color: v.$white;
+      cursor: pointer;
+    }
+
+    &-switch2 {
+      &::before {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        content: "MENU";
+        font-size: 12px;
+        font-weight: 600;
+        transform: translate(-50%, 10%);
+      }
+    }
+
+    &-menuwrap {
+      position: fixed;
+      top: 0;
+      left: 100%;
+      z-index: 9998;
+      width: 70%;
+      height: 100%;
+      padding: 5em 3% 2em;
+      overflow-y: scroll;
+      background-color: v.$menu-background;
+      transition: left 0.3s;
+    }
+
+    &-menulist {
+      margin-right: 3%;
+      padding-left: 5% !important;
+      list-style: none;
+
+      li {
+        a {
+          display: block;
+          padding: 0.5em 0;
+          color: v.$menu-text-color;
+          text-decoration: none;
+        }
+      }
+    }
+
+    &-cover {
+      display: none;
+    }
+  }
+
+  .hamburger-switch-ios {
+    &::before {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 4em;
+      height: 2em;
+      border-radius: 3em;
+      background-color: #c0c0c0;
+      content: "";
+      transform: translate(-50%, -70%);
+    }
+
+    &::after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2em;
+      height: 2em;
+      border-radius: 50%;
+      background-color: v.$white;
+      content: "";
+      transform: translate(-100%, -70%);
+      transition: transform 0.3s;
+    }
+  }
+
+  .hamburger-menulist-border {
+    li {
+      position: relative;
+      border-bottom: 1px solid v.$menu-border-color;
+
+      a {
+        &::before {
+          position: absolute;
+          top: 50%;
+          right: 0;
+          width: 0.7em;
+          height: 0.7em;
+          border: 2px solid;
+          border-color:
+            v.$border-color
+            v.$border-color
+            transparent
+            transparent;
+          content: "";
+          transform: translate(-100%, -50%) rotate(45deg);
+        }
+      }
+    }
+  }
+
+  #hamburger-demo2 {
+    &:checked {
+      ~ .hamburger-demo-switch {
+        position: fixed;
+      }
+
+      ~ .hamburger-demo-switch2 {
+        .hamburger-switch-ios {
+          &::before {
+            background-color: #66c666;
+          }
+
+          &::after {
+            transform: translate(0, -70%);
+          }
+        }
+
+        &::before {
+          content: "CLOSE";
+        }
+      }
+
+      ~ .hamburger-demo-menuwrap {
+        left: 30%;
+      }
+
+      ~ .hamburger-demo-cover {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9997;
+        display: block;
+        width: 100%;
+        height: 100%;
+        background-color: v.$overlay-color;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .hamburger-demo-menubox {
+    display: none;
+  }
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: v.$scrollbar-track-color;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: v.$scrollbar-thumb-color;
+}
+
+.hover-center-wide {
+  position: relative;
+  padding-bottom: 5px;
+
+  &::before {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    margin: auto;
+    background-color: v.$black;
+    content: "";
+    transform: scale(0, 1);
+    transform-origin: right top;
+    transition: transform 0.3s;
+  }
+
+  &:hover::before {
+    transform: scale(1, 1);
+    transform-origin: left top;
+  }
+}
+.read-more {
+  position: relative;
+  display: block;
+  text-decoration: none;
+
+  &::before {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: v.$black;
+    content: "";
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  &::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 3;
+    display: block;
+    width: 180px;
+    margin-top: -1em;
+    margin-left: -90px;
+    border: 1px solid v.$white;
+    border-radius: v.$radius-small;
+    color: v.$white;
+    content: "記事を読む";
+    font-weight: bold;
+    letter-spacing: 0.2em;
+    line-height: 48px;
+    text-align: center;
+    opacity: 0;
+    transition:
+      margin-top 0.3s,
+      opacity 0.3s;
+  }
+
+  &:hover {
+    &::before {
+      opacity: 0.7;
+    }
+
+    &::after {
+      margin-top: -0.5em;
+      opacity: 1;
+    }
+  }
+}
+.hover-big-black {
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: scale(1.1);
+
+    .h2-span {
+      background-color: v.$black;
+    }
+  }
+}
+
+.hover-big-yellow {
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: scale(1.1);
+
+    span {
+      background-color: v.$accent-color;
+      color: v.$black;
+      text-shadow: 2px 2px v.$white;
+    }
+  }
+}
+.black{
+    color: v.$black;
+}
+.red{
+    color: v.$required-color;
+}
+.blue{
+    color: v.$blue;
+}
+.green{
+    color: v.$primary-color;
+}
+// ==============================
+// PR
+// ==============================
+
+.PR {
+  &-sc {
+    display: flex;
+  }
+
+  &-width {
+    margin-top: 50px;
+  }
+
+  &-side {
+    margin: 1000px auto;
+  }
+
+  &-wide {
+    margin: 30px;
+  }
+
+  &-high {
+    margin: 50px auto;
+  }
+}
+.win-lose{
+    padding: 5px;
+    background-color: yellow;
+    border: solid 2px black;
+}
+// ==============================
+// ページトップ
+// ==============================
+
+#pagetop {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+
+  a {
+    display: block;
+  }
+
+  img {
+    width: 55px;
+    transition: transform .3s;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
+@media screen and (max-width:767px) {
+    #pagetop a {
+        width: 50px;
+        height: 50px;
+    }
+}
