@@ -14,6 +14,11 @@ if (
 ?>
 
 <form method="post" action="<?= escape($formAction) ?>">
+    <input
+        type="hidden"
+        name="csrf_token"
+        value="<?= escape(getCsrfToken()) ?>"
+    >
     <div>
         <label for="title">タイトル</label>
 
