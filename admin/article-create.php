@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../src/helpers.php';
 
 $errors = [];
 
@@ -79,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':published_at' => $publishedAt,
             ]);
 
-            header('Location: ../articles.php');
+            header('Location: ../public/articles.php');
             exit;
         } catch (PDOException $e) {
             if ((int) $e->getCode() === 23000) {
@@ -108,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h1>記事作成</h1>
 
         <p>
-            <a href="../articles.php">公開記事一覧へ戻る</a>
+            <a href="../public/articles.php">公開記事一覧へ戻る</a>
         </p>
 
         <?php if ($errors !== []): ?>
