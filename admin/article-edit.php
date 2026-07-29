@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/helpers.php';
 require_once __DIR__ . '/../src/auth.php';
+require_once __DIR__ . '/../src/csrf.php';
 
 requireAdminLogin();
 
@@ -65,6 +66,8 @@ if ($article === false) {
 |--------------------------------------------------------------------------
 */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireValidCsrfToken();
+
     $article['title'] = trim($_POST['title'] ?? '');
     $article['slug'] = trim($_POST['slug'] ?? '');
     $article['category'] = trim($_POST['category'] ?? '');

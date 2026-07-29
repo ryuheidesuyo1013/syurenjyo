@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/helpers.php';
 require_once __DIR__ . '/../src/auth.php';
+require_once __DIR__ . '/../src/csrf.php';
 
 requireAdminLogin();
 
@@ -46,7 +47,15 @@ $articles = $stmt->fetchAll();
         </p>
 
         <form method="post" action="logout.php">
-            <button type="submit">ログアウト</button>
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="<?= escape(getCsrfToken()) ?>"
+            >
+
+            <button type="submit">
+                ログアウト
+            </button>
         </form>
         <p>
             <a href="article-create.php">新しい記事を作成</a>
@@ -109,6 +118,12 @@ $articles = $stmt->fetchAll();
                                     style="display: inline;"
                                     onsubmit="return confirm('この記事を削除しますか？');"
                                 >
+                                    <input
+                                        type="hidden"
+                                        name="csrf_token"
+                                        value="<?= escape(getCsrfToken()) ?>"
+                                    >
+
                                     <input
                                         type="hidden"
                                         name="id"

@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/helpers.php';
 require_once __DIR__ . '/../src/auth.php';
+require_once __DIR__ . '/../src/csrf.php';
 
 startSession();
 
@@ -17,6 +18,8 @@ $errors = [];
 $username = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+     requireValidCsrfToken();
+
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
 
@@ -89,6 +92,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form method="post" action="login.php">
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="<?= escape(getCsrfToken()) ?>"
+                >
             <div>
                 <label for="username">ユーザー名</label>
 
