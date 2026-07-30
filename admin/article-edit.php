@@ -7,8 +7,11 @@ require_once __DIR__ . '/../src/helpers.php';
 require_once __DIR__ . '/../src/auth.php';
 require_once __DIR__ . '/../src/csrf.php';
 require_once __DIR__ . '/../src/article-validator.php';
+require_once __DIR__ . '/../src/ArticleRepository.php';
 
 requireAdminLogin();
+
+$repository = new ArticleRepository($pdo);
 
 $errors = [];
 
@@ -19,28 +22,7 @@ if ($id === false || $id === null || $id <= 0) {
     exit('記事が見つかりません。');
 }
 
-$sql = '
-    SELECT
-        id,
-        title,
-        slug,
-        category,
-        summary,
-        content,
-        status,
-        published_at
-    FROM articles
-    WHERE id = :id
-    LIMIT 1
-';
-
-$stmt = $pdo->prepare($sql);
-
-$stmt->execute([
-    ':id' => $id,
-]);
-
-$article = $stmt->fetch();
+$article = $repository->findById($id);
 
 if ($article === false) {
     http_response_code(404);
@@ -64,32 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $publishedAt = null;
         }
 
-        $updateSql = '
-            UPDATE articles
-            SET
-                title = :title,
-                slug = :slug,
-                category = :category,
-                summary = :summary,
-                content = :content,
-                status = :status,
-                published_at = :published_at
-            WHERE id = :id
-        ';
-
         try {
-            $updateStmt = $pdo->prepare($updateSql);
-
-            $updateStmt->execute([
-                ':title' => $article['title'],
-                ':slug' => $article['slug'],
-                ':category' => $article['category'],
-                ':summary' => $article['summary'],
-                ':content' => $article['content'],
-                ':status' => $article['status'],
-                ':published_at' => $publishedAt,
-                ':id' => $id,
-            ]);
+            $repository->update(
+                $id,
+                $article,
+                $publishedAt
+            );
 
             header('Location: article-list.php');
             exit;
