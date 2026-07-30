@@ -111,6 +111,66 @@ final class ArticleRepository
         return $stmt->fetch();
     }
 
+    /**
+     * 公開記事を検索する
+     */
+    public function searchPublished(
+        string $keyword = '',
+        string $category = ''
+    ): array {
+        $sql = '
+            SELECT
+                id,
+                title,
+                slug,
+                category,
+                summary,
+                published_at
+            FROM articles
+            WHERE status = :status
+              AND published_at IS NOT NULL
+              AND published_at <= NOW()
+        ';
+
+        $params = [
+            ':status' => 'published',
+        ];
+
+        if ($keyword !== '') {
+            $sql .= '
+                AND (
+                    title LIKE :keyword_title
+                    OR summary LIKE :keyword_summary
+                    OR content LIKE :keyword_content
+                )
+            ';
+
+            $searchKeyword = '%' . $keyword . '%';
+
+            $params[':keyword_title'] = $searchKeyword;
+            $params[':keyword_summary'] = $searchKeyword;
+            $params[':keyword_content'] = $searchKeyword;
+        }
+
+        if ($category !== '') {
+            $sql .= '
+                AND category = :category
+            ';
+
+            $params[':category'] = $category;
+        }
+
+        $sql .= '
+            ORDER BY published_at DESC
+        ';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute($params);
+
+        return $stmt->fetchAll();
+    }
+
     public function create(
         array $article,
         ?string $publishedAt
