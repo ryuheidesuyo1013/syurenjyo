@@ -6,6 +6,7 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/helpers.php';
 require_once __DIR__ . '/../src/auth.php';
 require_once __DIR__ . '/../src/csrf.php';
+require_once __DIR__ . '/../src/http.php';
 require_once __DIR__ . '/../src/article-validator.php';
 require_once __DIR__ . '/../src/ArticleRepository.php';
 
@@ -18,15 +19,13 @@ $errors = [];
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 if ($id === false || $id === null || $id <= 0) {
-    http_response_code(404);
-    exit('記事が見つかりません。');
+    abort(404, '記事が見つかりません。');
 }
 
 $article = $repository->findById($id);
 
 if ($article === false) {
-    http_response_code(404);
-    exit('記事が見つかりません。');
+    abort(404, '記事が見つかりません。');
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
