@@ -4,27 +4,11 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/helpers.php';
+require_once __DIR__ . '/../src/ArticleRepository.php';
 
-$sql = '
-    SELECT
-        id,
-        title,
-        slug,
-        category,
-        summary,
-        published_at
-    FROM articles
-    WHERE status = :status
-    ORDER BY published_at DESC
-';
+$repository = new ArticleRepository($pdo);
 
-$stmt = $pdo->prepare($sql);
-
-$stmt->execute([
-    ':status' => 'published',
-]);
-
-$articles = $stmt->fetchAll();
+$articles = $repository->findPublished();
 ?>
 
 <!DOCTYPE html>
@@ -47,43 +31,26 @@ $articles = $stmt->fetchAll();
         <?php else: ?>
             <?php foreach ($articles as $article): ?>
                 <article>
-                    <p>
-                        <?= htmlspecialchars(
-                            $article['category'],
-                            ENT_QUOTES,
-                            'UTF-8'
-                        ) ?>
-                    </p>
+
+                    <p><?= escape($article['category']) ?></p>
 
                     <h2>
                         <a href="article.php?slug=<?= urlencode($article['slug']) ?>">
-                            <?= htmlspecialchars(
-                                $article['title'],
-                                ENT_QUOTES,
-                                'UTF-8'
-                            ) ?>
+                            <?= escape($article['title']) ?>
                         </a>
                     </h2>
 
-                    <p>
-                        <?= htmlspecialchars(
-                            $article['summary'] ?? '',
-                            ENT_QUOTES,
-                            'UTF-8'
-                        ) ?>
-                    </p>
+                    <p><?= escape($article['summary'] ?? '') ?></p>
 
                     <p>
                         公開日：
-                        <?= htmlspecialchars(
-                            $article['published_at'],
-                            ENT_QUOTES,
-                            'UTF-8'
-                        ) ?>
+                        <?= escape($article['published_at']) ?>
                     </p>
+
                 </article>
             <?php endforeach; ?>
         <?php endif; ?>
+
     </main>
 </body>
 </html>

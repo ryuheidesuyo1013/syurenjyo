@@ -55,6 +55,62 @@ final class ArticleRepository
         return $stmt->fetch();
     }
 
+    public function findPublished(): array
+    {
+        $sql = '
+            SELECT
+                id,
+                title,
+                slug,
+                category,
+                summary,
+                published_at
+            FROM articles
+            WHERE status = :status
+              AND published_at IS NOT NULL
+              AND published_at <= NOW()
+            ORDER BY published_at DESC
+        ';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute([
+            ':status' => 'published',
+        ]);
+
+        return $stmt->fetchAll();
+    }
+
+    public function findPublishedBySlug(string $slug): array|false
+    {
+        $sql = '
+            SELECT
+                id,
+                title,
+                slug,
+                category,
+                summary,
+                content,
+                published_at,
+                updated_at
+            FROM articles
+            WHERE slug = :slug
+              AND status = :status
+              AND published_at IS NOT NULL
+              AND published_at <= NOW()
+            LIMIT 1
+        ';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute([
+            ':slug' => $slug,
+            ':status' => 'published',
+        ]);
+
+        return $stmt->fetch();
+    }
+
     public function create(
         array $article,
         ?string $publishedAt
