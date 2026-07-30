@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/auth.php';
+require_once __DIR__ . '/http.php';
 
 /**
  * CSRFトークンを取得する
@@ -40,14 +41,16 @@ function validateCsrfToken(?string $token): bool
 }
 
 /**
- * CSRFトークンが不正なら処理を終了する
+ * CSRFトークンが不正なら403エラーを表示する
  */
 function requireValidCsrfToken(): void
 {
     $token = $_POST['csrf_token'] ?? null;
 
     if (!is_string($token) || !validateCsrfToken($token)) {
-        http_response_code(403);
-        exit('不正なリクエストです。');
+        abort(
+            403,
+            'セキュリティ確認に失敗しました。ページを再読み込みして、もう一度お試しください。'
+        );
     }
 }
