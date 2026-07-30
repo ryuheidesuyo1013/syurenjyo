@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/auth.php';
 require_once __DIR__ . '/../src/csrf.php';
+require_once __DIR__ . '/../src/ArticleRepository.php';
 
 requireAdminLogin();
 
@@ -22,16 +23,14 @@ if ($id === false || $id === null || $id <= 0) {
     exit('不正なリクエストです。');
 }
 
-$sql = '
-    DELETE FROM articles
-    WHERE id = :id
-';
+$repository = new ArticleRepository($pdo);
 
-$stmt = $pdo->prepare($sql);
+try {
+    $repository->delete($id);
 
-$stmt->execute([
-    ':id' => $id,
-]);
-
-header('Location: article-list.php');
-exit;
+    header('Location: article-list.php');
+    exit;
+} catch (PDOException $e) {
+    http_response_code(500);
+    exit('記事の削除に失敗しました。');
+}

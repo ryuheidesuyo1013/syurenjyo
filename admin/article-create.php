@@ -7,8 +7,11 @@ require_once __DIR__ . '/../src/helpers.php';
 require_once __DIR__ . '/../src/auth.php';
 require_once __DIR__ . '/../src/csrf.php';
 require_once __DIR__ . '/../src/article-validator.php';
+require_once __DIR__ . '/../src/ArticleRepository.php';
 
 requireAdminLogin();
+
+$repository = new ArticleRepository($pdo);
 
 $errors = [];
 $article = getEmptyArticleData();
@@ -24,38 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ? date('Y-m-d H:i:s')
             : null;
 
-        $sql = '
-            INSERT INTO articles (
-                title,
-                slug,
-                category,
-                summary,
-                content,
-                status,
-                published_at
-            ) VALUES (
-                :title,
-                :slug,
-                :category,
-                :summary,
-                :content,
-                :status,
-                :published_at
-            )
-        ';
-
         try {
-            $stmt = $pdo->prepare($sql);
-
-            $stmt->execute([
-                ':title' => $article['title'],
-                ':slug' => $article['slug'],
-                ':category' => $article['category'],
-                ':summary' => $article['summary'],
-                ':content' => $article['content'],
-                ':status' => $article['status'],
-                ':published_at' => $publishedAt,
-            ]);
+            $repository->create(
+                $article,
+                $publishedAt
+            );
 
             header('Location: article-list.php');
             exit;

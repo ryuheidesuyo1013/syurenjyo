@@ -6,23 +6,13 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/helpers.php';
 require_once __DIR__ . '/../src/auth.php';
 require_once __DIR__ . '/../src/csrf.php';
+require_once __DIR__ . '/../src/ArticleRepository.php';
 
 requireAdminLogin();
 
-$sql = '
-    SELECT
-        id,
-        title,
-        category,
-        status,
-        published_at,
-        updated_at
-    FROM articles
-    ORDER BY created_at DESC
-';
+$repository = new ArticleRepository($pdo);
 
-$stmt = $pdo->query($sql);
-$articles = $stmt->fetchAll();
+$articles = $repository->findAll();
 ?>
 
 <!DOCTYPE html>
