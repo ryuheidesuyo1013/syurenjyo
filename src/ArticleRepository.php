@@ -171,6 +171,140 @@ final class ArticleRepository
         return $stmt->fetchAll();
     }
 
+    /**
+     * 検索条件に一致する公開記事の総件数を取得する
+     */
+    public function countPublishedSearch(
+        string $keyword = '',
+        string $category = ''
+    ): int {
+        $sql = '
+            SELECT COUNT(*)
+            FROM articles
+            WHERE status = :status
+              AND published_at IS NOT NULL
+              AND published_at <= NOW()
+        ';
+
+        $params = [
+            ':status' => 'published',
+        ];
+
+        if ($keyword !== '') {
+            $sql .= '
+                AND (
+                    title LIKE :keyword_title
+                    OR summary LIKE :keyword_summary
+                    OR content LIKE :keyword_content
+                )
+            ';
+
+            $searchKeyword = '%' . $keyword . '%';
+
+            $params[':keyword_title'] = $searchKeyword;
+            $params[':keyword_summary'] = $searchKeyword;
+            $params[':keyword_content'] = $searchKeyword;
+        }
+
+        if ($category !== '') {
+            $sql .= '
+                AND category = :category
+            ';
+
+            $params[':category'] = $category;
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute($params);
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
+     * 公開記事を検索し、指定された範囲だけ取得する
+     */
+    public function searchPublishedWithPagination(
+        string $keyword = '',
+        string $category = '',
+        int $limit = 5,
+        int $offset = 0
+    ): array {
+        $sql = '
+            SELECT
+                id,
+                title,
+                slug,
+                category,
+                summary,
+                published_at
+            FROM articles
+            WHERE status = :status
+              AND published_at IS NOT NULL
+              AND published_at <= NOW()
+        ';
+
+        $params = [
+            ':status' => 'published',
+        ];
+
+        if ($keyword !== '') {
+            $sql .= '
+                AND (
+                    title LIKE :keyword_title
+                    OR summary LIKE :keyword_summary
+                    OR content LIKE :keyword_content
+                )
+            ';
+
+            $searchKeyword = '%' . $keyword . '%';
+
+            $params[':keyword_title'] = $searchKeyword;
+            $params[':keyword_summary'] = $searchKeyword;
+            $params[':keyword_content'] = $searchKeyword;
+        }
+
+        if ($category !== '') {
+            $sql .= '
+                AND category = :category
+            ';
+
+            $params[':category'] = $category;
+        }
+
+        $sql .= '
+            ORDER BY published_at DESC
+            LIMIT :limit
+            OFFSET :offset
+        ';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        foreach ($params as $name => $value) {
+            $stmt->bindValue(
+                $name,
+                $value,
+                PDO::PARAM_STR
+            );
+        }
+
+        $stmt->bindValue(
+            ':limit',
+            $limit,
+            PDO::PARAM_INT
+        );
+
+        $stmt->bindValue(
+            ':offset',
+            $offset,
+            PDO::PARAM_INT
+        );
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
     public function create(
         array $article,
         ?string $publishedAt
