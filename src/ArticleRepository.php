@@ -9,18 +9,25 @@ final class ArticleRepository
     ) {
     }
 
+    /**
+     * 管理画面用の記事一覧を取得する
+     */
     public function findAll(): array
     {
         $sql = '
             SELECT
-                id,
-                title,
-                category,
-                status,
-                published_at,
-                updated_at
-            FROM articles
-            ORDER BY created_at DESC
+                a.id,
+                a.title,
+                a.category_id,
+                c.name AS category,
+                c.slug AS category_slug,
+                a.status,
+                a.published_at,
+                a.updated_at
+            FROM articles AS a
+            INNER JOIN categories AS c
+                ON c.id = a.category_id
+            ORDER BY a.created_at DESC
         ';
 
         return $this
@@ -29,20 +36,27 @@ final class ArticleRepository
             ->fetchAll();
     }
 
+    /**
+     * IDを指定して記事を取得する
+     */
     public function findById(int $id): array|false
     {
         $sql = '
             SELECT
-                id,
-                title,
-                slug,
-                category,
-                summary,
-                content,
-                status,
-                published_at
-            FROM articles
-            WHERE id = :id
+                a.id,
+                a.title,
+                a.slug,
+                a.category_id,
+                c.name AS category,
+                c.slug AS category_slug,
+                a.summary,
+                a.content,
+                a.status,
+                a.published_at
+            FROM articles AS a
+            INNER JOIN categories AS c
+                ON c.id = a.category_id
+            WHERE a.id = :id
             LIMIT 1
         ';
 
@@ -55,21 +69,28 @@ final class ArticleRepository
         return $stmt->fetch();
     }
 
+    /**
+     * 公開中の記事一覧を取得する
+     */
     public function findPublished(): array
     {
         $sql = '
             SELECT
-                id,
-                title,
-                slug,
-                category,
-                summary,
-                published_at
-            FROM articles
-            WHERE status = :status
-              AND published_at IS NOT NULL
-              AND published_at <= NOW()
-            ORDER BY published_at DESC
+                a.id,
+                a.title,
+                a.slug,
+                a.category_id,
+                c.name AS category,
+                c.slug AS category_slug,
+                a.summary,
+                a.published_at
+            FROM articles AS a
+            INNER JOIN categories AS c
+                ON c.id = a.category_id
+            WHERE a.status = :status
+              AND a.published_at IS NOT NULL
+              AND a.published_at <= NOW()
+            ORDER BY a.published_at DESC
         ';
 
         $stmt = $this->pdo->prepare($sql);
@@ -81,23 +102,30 @@ final class ArticleRepository
         return $stmt->fetchAll();
     }
 
+    /**
+     * スラッグを指定して公開記事を取得する
+     */
     public function findPublishedBySlug(string $slug): array|false
     {
         $sql = '
             SELECT
-                id,
-                title,
-                slug,
-                category,
-                summary,
-                content,
-                published_at,
-                updated_at
-            FROM articles
-            WHERE slug = :slug
-              AND status = :status
-              AND published_at IS NOT NULL
-              AND published_at <= NOW()
+                a.id,
+                a.title,
+                a.slug,
+                a.category_id,
+                c.name AS category,
+                c.slug AS category_slug,
+                a.summary,
+                a.content,
+                a.published_at,
+                a.updated_at
+            FROM articles AS a
+            INNER JOIN categories AS c
+                ON c.id = a.category_id
+            WHERE a.slug = :slug
+              AND a.status = :status
+              AND a.published_at IS NOT NULL
+              AND a.published_at <= NOW()
             LIMIT 1
         ';
 
@@ -120,16 +148,20 @@ final class ArticleRepository
     ): array {
         $sql = '
             SELECT
-                id,
-                title,
-                slug,
-                category,
-                summary,
-                published_at
-            FROM articles
-            WHERE status = :status
-              AND published_at IS NOT NULL
-              AND published_at <= NOW()
+                a.id,
+                a.title,
+                a.slug,
+                a.category_id,
+                c.name AS category,
+                c.slug AS category_slug,
+                a.summary,
+                a.published_at
+            FROM articles AS a
+            INNER JOIN categories AS c
+                ON c.id = a.category_id
+            WHERE a.status = :status
+              AND a.published_at IS NOT NULL
+              AND a.published_at <= NOW()
         ';
 
         $params = [
@@ -139,9 +171,9 @@ final class ArticleRepository
         if ($keyword !== '') {
             $sql .= '
                 AND (
-                    title LIKE :keyword_title
-                    OR summary LIKE :keyword_summary
-                    OR content LIKE :keyword_content
+                    a.title LIKE :keyword_title
+                    OR a.summary LIKE :keyword_summary
+                    OR a.content LIKE :keyword_content
                 )
             ';
 
@@ -154,14 +186,14 @@ final class ArticleRepository
 
         if ($category !== '') {
             $sql .= '
-                AND category = :category
+                AND c.name = :category
             ';
 
             $params[':category'] = $category;
         }
 
         $sql .= '
-            ORDER BY published_at DESC
+            ORDER BY a.published_at DESC
         ';
 
         $stmt = $this->pdo->prepare($sql);
@@ -180,10 +212,12 @@ final class ArticleRepository
     ): int {
         $sql = '
             SELECT COUNT(*)
-            FROM articles
-            WHERE status = :status
-              AND published_at IS NOT NULL
-              AND published_at <= NOW()
+            FROM articles AS a
+            INNER JOIN categories AS c
+                ON c.id = a.category_id
+            WHERE a.status = :status
+              AND a.published_at IS NOT NULL
+              AND a.published_at <= NOW()
         ';
 
         $params = [
@@ -193,9 +227,9 @@ final class ArticleRepository
         if ($keyword !== '') {
             $sql .= '
                 AND (
-                    title LIKE :keyword_title
-                    OR summary LIKE :keyword_summary
-                    OR content LIKE :keyword_content
+                    a.title LIKE :keyword_title
+                    OR a.summary LIKE :keyword_summary
+                    OR a.content LIKE :keyword_content
                 )
             ';
 
@@ -208,7 +242,7 @@ final class ArticleRepository
 
         if ($category !== '') {
             $sql .= '
-                AND category = :category
+                AND c.name = :category
             ';
 
             $params[':category'] = $category;
@@ -232,16 +266,20 @@ final class ArticleRepository
     ): array {
         $sql = '
             SELECT
-                id,
-                title,
-                slug,
-                category,
-                summary,
-                published_at
-            FROM articles
-            WHERE status = :status
-              AND published_at IS NOT NULL
-              AND published_at <= NOW()
+                a.id,
+                a.title,
+                a.slug,
+                a.category_id,
+                c.name AS category,
+                c.slug AS category_slug,
+                a.summary,
+                a.published_at
+            FROM articles AS a
+            INNER JOIN categories AS c
+                ON c.id = a.category_id
+            WHERE a.status = :status
+              AND a.published_at IS NOT NULL
+              AND a.published_at <= NOW()
         ';
 
         $params = [
@@ -251,9 +289,9 @@ final class ArticleRepository
         if ($keyword !== '') {
             $sql .= '
                 AND (
-                    title LIKE :keyword_title
-                    OR summary LIKE :keyword_summary
-                    OR content LIKE :keyword_content
+                    a.title LIKE :keyword_title
+                    OR a.summary LIKE :keyword_summary
+                    OR a.content LIKE :keyword_content
                 )
             ';
 
@@ -266,14 +304,14 @@ final class ArticleRepository
 
         if ($category !== '') {
             $sql .= '
-                AND category = :category
+                AND c.name = :category
             ';
 
             $params[':category'] = $category;
         }
 
         $sql .= '
-            ORDER BY published_at DESC
+            ORDER BY a.published_at DESC
             LIMIT :limit
             OFFSET :offset
         ';
@@ -305,6 +343,9 @@ final class ArticleRepository
         return $stmt->fetchAll();
     }
 
+    /**
+     * 記事を作成する
+     */
     public function create(
         array $article,
         ?string $publishedAt
@@ -313,7 +354,7 @@ final class ArticleRepository
             INSERT INTO articles (
                 title,
                 slug,
-                category,
+                category_id,
                 summary,
                 content,
                 status,
@@ -321,7 +362,7 @@ final class ArticleRepository
             ) VALUES (
                 :title,
                 :slug,
-                :category,
+                :category_id,
                 :summary,
                 :content,
                 :status,
@@ -334,7 +375,7 @@ final class ArticleRepository
         $stmt->execute([
             ':title' => $article['title'],
             ':slug' => $article['slug'],
-            ':category' => $article['category'],
+            ':category_id' => $article['category_id'],
             ':summary' => $article['summary'],
             ':content' => $article['content'],
             ':status' => $article['status'],
@@ -342,6 +383,9 @@ final class ArticleRepository
         ]);
     }
 
+    /**
+     * 記事を更新する
+     */
     public function update(
         int $id,
         array $article,
@@ -352,7 +396,7 @@ final class ArticleRepository
             SET
                 title = :title,
                 slug = :slug,
-                category = :category,
+                category_id = :category_id,
                 summary = :summary,
                 content = :content,
                 status = :status,
@@ -365,7 +409,7 @@ final class ArticleRepository
         $stmt->execute([
             ':title' => $article['title'],
             ':slug' => $article['slug'],
-            ':category' => $article['category'],
+            ':category_id' => $article['category_id'],
             ':summary' => $article['summary'],
             ':content' => $article['content'],
             ':status' => $article['status'],
@@ -374,6 +418,9 @@ final class ArticleRepository
         ]);
     }
 
+    /**
+     * 記事を削除する
+     */
     public function delete(int $id): void
     {
         $sql = '

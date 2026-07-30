@@ -8,19 +8,29 @@ require_once __DIR__ . '/../src/auth.php';
 require_once __DIR__ . '/../src/csrf.php';
 require_once __DIR__ . '/../src/article-validator.php';
 require_once __DIR__ . '/../src/ArticleRepository.php';
+require_once __DIR__ . '/../src/CategoryRepository.php';
 
 requireAdminLogin();
 
 $repository = new ArticleRepository($pdo);
+$categoryRepository = new CategoryRepository($pdo);
 
 $errors = [];
 $article = getEmptyArticleData();
+$categories = $categoryRepository->findAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     requireValidCsrfToken();
 
     $article = getArticleFormData($_POST);
     $errors = validateArticleData($article);
+
+    if (
+        $article['category_id'] > 0
+        && !$categoryRepository->existsById($article['category_id'])
+    ) {
+        $errors[] = '選択されたカテゴリが存在しません。';
+    }
 
     if ($errors === []) {
         $publishedAt = $article['status'] === 'published'
@@ -37,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         } catch (PDOException $e) {
             if ($e->getCode() === '23000') {
-                $errors[] = '同じスラッグの記事が既に存在します。';
+                $errors[] = '同じスラッグの記事が既に存在するか、カテゴリが不正です。';
             } else {
                 $errors[] = '記事の作成に失敗しました。';
             }

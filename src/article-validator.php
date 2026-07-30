@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @return array{
  *     title: string,
  *     slug: string,
- *     category: string,
+ *     category_id: int,
  *     summary: string,
  *     content: string,
  *     status: string
@@ -19,7 +19,7 @@ function getEmptyArticleData(): array
     return [
         'title' => '',
         'slug' => '',
-        'category' => '',
+        'category_id' => 0,
         'summary' => '',
         'content' => '',
         'status' => 'draft',
@@ -32,7 +32,7 @@ function getEmptyArticleData(): array
  * @return array{
  *     title: string,
  *     slug: string,
- *     category: string,
+ *     category_id: int,
  *     summary: string,
  *     content: string,
  *     status: string
@@ -43,7 +43,7 @@ function getArticleFormData(array $postData): array
     return [
         'title' => trim((string) ($postData['title'] ?? '')),
         'slug' => trim((string) ($postData['slug'] ?? '')),
-        'category' => trim((string) ($postData['category'] ?? '')),
+        'category_id' => (int) ($postData['category_id'] ?? 0),
         'summary' => trim((string) ($postData['summary'] ?? '')),
         'content' => trim((string) ($postData['content'] ?? '')),
         'status' => trim((string) ($postData['status'] ?? 'draft')),
@@ -56,7 +56,7 @@ function getArticleFormData(array $postData): array
  * @param array{
  *     title: string,
  *     slug: string,
- *     category: string,
+ *     category_id: int,
  *     summary: string,
  *     content: string,
  *     status: string
@@ -84,10 +84,8 @@ function validateArticleData(array $article): array
         $errors[] = 'スラッグは半角英小文字・数字・ハイフンで入力してください。';
     }
 
-    if ($article['category'] === '') {
-        $errors[] = 'カテゴリを入力してください。';
-    } elseif (mb_strlen($article['category']) > 100) {
-        $errors[] = 'カテゴリは100文字以内で入力してください。';
+    if ($article['category_id'] <= 0) {
+        $errors[] = 'カテゴリを選択してください。';
     }
 
     if (mb_strlen($article['summary']) > 500) {
