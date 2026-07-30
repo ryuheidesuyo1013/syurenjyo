@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 if (
     !isset($article)
+    || !isset($categories)
     || !isset($formAction)
     || !isset($submitLabel)
 ) {
@@ -11,6 +12,10 @@ if (
         'フォームに必要な変数が設定されていません。'
     );
 }
+
+$selectedCategoryId = isset($article['category_id'])
+    ? (int) $article['category_id']
+    : 0;
 ?>
 
 <form method="post" action="<?= escape($formAction) ?>">
@@ -19,6 +24,7 @@ if (
         name="csrf_token"
         value="<?= escape(getCsrfToken()) ?>"
     >
+
     <div>
         <label for="title">タイトル</label>
 
@@ -46,15 +52,31 @@ if (
     </div>
 
     <div>
-        <label for="category">カテゴリ</label>
+        <label for="category_id">カテゴリ</label>
 
-        <input
-            type="text"
-            id="category"
-            name="category"
-            value="<?= escape($article['category'] ?? '') ?>"
+        <select
+            id="category_id"
+            name="category_id"
             required
         >
+            <option value="">カテゴリを選択してください</option>
+
+            <?php foreach ($categories as $category): ?>
+                <?php
+                $categoryId = (int) $category['id'];
+                $categoryName = (string) $category['name'];
+                ?>
+
+                <option
+                    value="<?= $categoryId ?>"
+                    <?= $selectedCategoryId === $categoryId
+                        ? 'selected'
+                        : '' ?>
+                >
+                    <?= escape($categoryName) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
     </div>
 
     <div>

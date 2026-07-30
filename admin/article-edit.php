@@ -9,12 +9,15 @@ require_once __DIR__ . '/../src/csrf.php';
 require_once __DIR__ . '/../src/http.php';
 require_once __DIR__ . '/../src/article-validator.php';
 require_once __DIR__ . '/../src/ArticleRepository.php';
+require_once __DIR__ . '/../src/CategoryRepository.php';
 
 requireAdminLogin();
 
 $repository = new ArticleRepository($pdo);
+$categoryRepository = new CategoryRepository($pdo);
 
 $errors = [];
+$categories = $categoryRepository->findAll();
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
@@ -33,6 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $formData = getArticleFormData($_POST);
     $errors = validateArticleData($formData);
+
+    if (
+        $formData['category_id'] > 0
+        && !$categoryRepository->existsById($formData['category_id'])
+    ) {
+        $errors[] = '選択されたカテゴリが存在しません。';
+    }
 
     $article = array_merge($article, $formData);
 
@@ -56,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         } catch (PDOException $e) {
             if ($e->getCode() === '23000') {
-                $errors[] = '同じスラッグの記事が既に存在します。';
+                $errors[] = '同じスラッグの記事が既に存在するか、カテゴリが不正です。';
             } else {
                 $errors[] = '記事の更新に失敗しました。';
             }
