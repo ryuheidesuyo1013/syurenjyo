@@ -6,20 +6,12 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/helpers.php';
 require_once __DIR__ . '/../src/auth.php';
 require_once __DIR__ . '/../src/csrf.php';
+require_once __DIR__ . '/../src/article-validator.php';
 
 requireAdminLogin();
 
 $errors = [];
 
-/*
-|--------------------------------------------------------------------------
-| URLから記事IDを取得
-|--------------------------------------------------------------------------
-|
-| 例：
-| article-edit.php?id=1
-|
-*/
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 if ($id === false || $id === null || $id <= 0) {
@@ -27,11 +19,6 @@ if ($id === false || $id === null || $id <= 0) {
     exit('記事が見つかりません。');
 }
 
-/*
-|--------------------------------------------------------------------------
-| 編集対象の記事を取得
-|--------------------------------------------------------------------------
-*/
 $sql = '
     SELECT
         id,
@@ -60,55 +47,19 @@ if ($article === false) {
     exit('記事が見つかりません。');
 }
 
-/*
-|--------------------------------------------------------------------------
-| フォームが送信されたときの処理
-|--------------------------------------------------------------------------
-*/
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     requireValidCsrfToken();
 
-    $article['title'] = trim($_POST['title'] ?? '');
-    $article['slug'] = trim($_POST['slug'] ?? '');
-    $article['category'] = trim($_POST['category'] ?? '');
-    $article['summary'] = trim($_POST['summary'] ?? '');
-    $article['content'] = trim($_POST['content'] ?? '');
-    $article['status'] = $_POST['status'] ?? 'draft';
+    $formData = getArticleFormData($_POST);
+    $errors = validateArticleData($formData);
 
-    /*
-    |--------------------------------------------------------------------------
-    | 入力チェック
-    |--------------------------------------------------------------------------
-    */
-    if ($article['title'] === '') {
-        $errors[] = 'タイトルを入力してください。';
-    }
+    $article = array_merge($article, $formData);
 
-    if ($article['slug'] === '') {
-        $errors[] = 'スラッグを入力してください。';
-    }
-
-    if ($article['category'] === '') {
-        $errors[] = 'カテゴリを入力してください。';
-    }
-
-    if ($article['content'] === '') {
-        $errors[] = '本文を入力してください。';
-    }
-
-    if (!in_array($article['status'], ['draft', 'published'], true)) {
-        $errors[] = '公開状態が不正です。';
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | エラーがなければ更新
-    |--------------------------------------------------------------------------
-    */
     if ($errors === []) {
         if ($article['status'] === 'published') {
-            $publishedAt = $article['published_at']
-                ?? date('Y-m-d H:i:s');
+            $publishedAt = $article['published_at'] !== null
+                ? $article['published_at']
+                : date('Y-m-d H:i:s');
         } else {
             $publishedAt = null;
         }
@@ -152,11 +103,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| 共通フォームへ渡す変数
-|--------------------------------------------------------------------------
-*/
 $formAction = 'article-edit.php?id=' . $id;
 $submitLabel = '変更を保存';
 ?>
