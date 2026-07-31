@@ -23,6 +23,7 @@ $selectedStatus = isset($article['status'])
 ?>
 
 <form
+    class="js-article-form"
     method="post"
     action="<?= escape($formAction) ?>"
 >
@@ -159,19 +160,151 @@ $selectedStatus = isset($article['status'])
     </div>
 
     <div class="form-group">
-        <label
-            class="form-label"
-            for="content"
-        >
+        <span class="form-label">
             本文
 
             <span class="form-required">
                 必須
             </span>
-        </label>
+        </span>
+
+        <div
+            id="article-toolbar"
+            class="article-editor-toolbar"
+            hidden
+        >
+            <span class="ql-formats">
+                <select
+                    class="ql-header"
+                    aria-label="見出し"
+                >
+                    <option value="2">見出し2</option>
+                    <option value="3">見出し3</option>
+                    <option selected>本文</option>
+                </select>
+
+                <select
+                    class="ql-size"
+                    aria-label="文字サイズ"
+                >
+                    <option value="small">小</option>
+                    <option selected>標準</option>
+                    <option value="large">大</option>
+                    <option value="huge">特大</option>
+                </select>
+            </span>
+
+            <span class="ql-formats">
+                <select
+                    class="ql-color"
+                    aria-label="文字色"
+                ></select>
+
+                <select
+                    class="ql-background"
+                    aria-label="背景色"
+                ></select>
+            </span>
+
+            <span class="ql-formats">
+                <button
+                    class="ql-bold"
+                    type="button"
+                    aria-label="太字"
+                ></button>
+
+                <button
+                    class="ql-italic"
+                    type="button"
+                    aria-label="斜体"
+                ></button>
+
+                <button
+                    class="ql-underline"
+                    type="button"
+                    aria-label="下線"
+                ></button>
+
+                <button
+                    class="ql-strike"
+                    type="button"
+                    aria-label="打ち消し線"
+                ></button>
+            </span>
+
+            <span class="ql-formats">
+                <select
+                    class="ql-align"
+                    aria-label="文字揃え"
+                ></select>
+            </span>
+
+            <span class="ql-formats">
+                <button
+                    class="ql-list"
+                    type="button"
+                    value="ordered"
+                    aria-label="番号付きリスト"
+                ></button>
+
+                <button
+                    class="ql-list"
+                    type="button"
+                    value="bullet"
+                    aria-label="箇条書き"
+                ></button>
+
+                <button
+                    class="ql-indent"
+                    type="button"
+                    value="-1"
+                    aria-label="インデントを減らす"
+                ></button>
+
+                <button
+                    class="ql-indent"
+                    type="button"
+                    value="+1"
+                    aria-label="インデントを増やす"
+                ></button>
+            </span>
+
+            <span class="ql-formats">
+                <button
+                    class="ql-blockquote"
+                    type="button"
+                    aria-label="引用"
+                ></button>
+
+                <button
+                    class="ql-code-block"
+                    type="button"
+                    aria-label="コードブロック"
+                ></button>
+
+                <button
+                    class="ql-link"
+                    type="button"
+                    aria-label="リンク"
+                ></button>
+
+                <button
+                    class="ql-clean"
+                    type="button"
+                    aria-label="書式を解除"
+                ></button>
+            </span>
+        </div>
+
+        <div
+            id="article-editor"
+            class="article-editor"
+            aria-label="記事本文エディター"
+            hidden
+        ></div>
 
         <textarea
-            class="form-control"
+            class="form-control js-article-content article-content-source"
             id="content"
             name="content"
             rows="18"
@@ -179,7 +312,9 @@ $selectedStatus = isset($article['status'])
         ><?= escape($article['content'] ?? '') ?></textarea>
 
         <p class="form-help">
-            記事の本文を入力してください。
+            見出し、文字サイズ、文字色、背景色、文字揃え、インデント、
+            打ち消し線、コードブロックなどを使用できます。
+            リンクは文字を選択してから押してください。
         </p>
     </div>
 
