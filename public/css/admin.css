@@ -1103,3 +1103,136 @@ textarea.form-control {
         width: 100%;
     }
 }
+
+/* ========================================
+   Quill記事エディター
+======================================== */
+
+.article-editor-toolbar[hidden],
+.article-editor[hidden] {
+    display: none !important;
+}
+
+.js-article-form.quill-ready .article-content-source {
+    display: none !important;
+}
+
+.article-editor-toolbar.ql-toolbar.ql-snow {
+    border-color: var(--admin-border);
+    border-radius: 7px 7px 0 0;
+    background: #f8fafc;
+}
+
+.article-editor.ql-container.ql-snow {
+    min-height: 360px;
+    border-color: var(--admin-border);
+    border-radius: 0 0 7px 7px;
+    background: var(--admin-surface);
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.article-editor .ql-editor {
+    min-height: 360px;
+    line-height: 1.8;
+}
+
+.article-editor .ql-editor.ql-blank::before {
+    color: var(--admin-text-muted);
+    font-style: normal;
+}
+
+.article-editor:focus-within {
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px rgba(23, 105, 170, 0.15);
+}
+
+.article-editor--invalid.ql-container.ql-snow {
+    border-color: var(--admin-danger);
+    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.12);
+}
+
+@media (max-width: 640px) {
+    .article-editor-toolbar.ql-toolbar.ql-snow {
+        padding: 8px 6px;
+    }
+
+    .article-editor.ql-container.ql-snow,
+    .article-editor .ql-editor {
+        min-height: 280px;
+    }
+}
+
+/* Quill拡張ツールバー */
+.article-editor-toolbar .ql-formats {
+    margin-right: 10px;
+}
+
+.article-editor-toolbar .ql-picker.ql-header {
+    width: 104px;
+}
+
+.article-editor-toolbar .ql-picker.ql-size {
+    width: 78px;
+}
+
+.article-editor-toolbar .ql-picker.ql-align {
+    width: 42px;
+}
+
+.article-editor-toolbar .ql-picker-label,
+.article-editor-toolbar button {
+    border-radius: 4px;
+}
+
+.article-editor-toolbar .ql-picker-label:hover,
+.article-editor-toolbar button:hover {
+    background: rgba(23, 105, 170, 0.08);
+}
+
+.article-editor .ql-editor .ql-size-small {
+    font-size: 0.8em;
+}
+
+.article-editor .ql-editor .ql-size-large {
+    font-size: 1.35em;
+}
+
+.article-editor .ql-editor .ql-size-huge {
+    font-size: 1.8em;
+}
+
+.article-editor .ql-editor blockquote {
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    border-left: 4px solid var(--admin-primary);
+    color: var(--admin-text-muted);
+    background: #f8fafc;
+}
+
+.article-editor .ql-editor .ql-code-block-container {
+    margin: 1em 0;
+    border-radius: 7px;
+    background: #111827;
+    color: #f9fafb;
+}
+
+.article-editor .ql-editor a {
+    color: var(--admin-primary);
+    text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+    .article-editor-toolbar .ql-formats {
+        margin-right: 4px;
+        margin-bottom: 6px;
+    }
+
+    .article-editor-toolbar .ql-picker.ql-header {
+        width: 96px;
+    }
+
+    .article-editor-toolbar .ql-picker.ql-size {
+        width: 72px;
+    }
+}
