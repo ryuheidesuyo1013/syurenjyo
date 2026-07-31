@@ -35,7 +35,58 @@ if (
     $sort = 'created_desc';
 }
 
-$articles = $repository->findAll($sort);
+$perPage = 10;
+$totalArticles = $repository->countAll();
+$totalPages = max(
+    1,
+    (int) ceil($totalArticles / $perPage)
+);
+
+$page = filter_input(
+    INPUT_GET,
+    'page',
+    FILTER_VALIDATE_INT,
+    [
+        'options' => [
+            'min_range' => 1,
+        ],
+    ]
+);
+
+if (!is_int($page)) {
+    $page = 1;
+}
+
+if ($page > $totalPages) {
+    $page = $totalPages;
+}
+
+$offset = ($page - 1) * $perPage;
+
+$articles = $repository->findAll(
+    $sort,
+    $perPage,
+    $offset
+);
+
+$firstArticleNumber = $totalArticles === 0
+    ? 0
+    : $offset + 1;
+
+$lastArticleNumber = min(
+    $offset + count($articles),
+    $totalArticles
+);
+
+$buildPageUrl = static function (
+    int $targetPage,
+    string $sort
+): string {
+    return 'article-list.php?' . http_build_query([
+        'sort' => $sort,
+        'page' => $targetPage,
+    ]);
+};
 
 $pageTitle = '記事管理';
 
@@ -80,7 +131,11 @@ require __DIR__ . '/../templates/admin-header.php';
             </h2>
 
             <span class="text-muted">
-                <?= escape((string) count($articles)) ?>件
+                全<?= escape((string) $totalArticles) ?>件
+                <?php if ($totalArticles > 0): ?>
+                    （<?= escape((string) $firstArticleNumber) ?>
+                    ～<?= escape((string) $lastArticleNumber) ?>件目）
+                <?php endif; ?>
             </span>
         </div>
 
@@ -230,6 +285,80 @@ require __DIR__ . '/../templates/admin-header.php';
                 </tbody>
             </table>
         </div>
+
+        <?php if ($totalPages > 1): ?>
+            <nav
+                class="pagination"
+                aria-label="記事一覧のページ切り替え"
+            >
+                <?php if ($page > 1): ?>
+                    <a
+                        class="pagination__link pagination__link--previous"
+                        href="<?= escape(
+                            $buildPageUrl(
+                                $page - 1,
+                                $sort
+                            )
+                        ) ?>"
+                    >
+                        前へ
+                    </a>
+                <?php else: ?>
+                    <span
+                        class="pagination__link pagination__link--disabled"
+                        aria-disabled="true"
+                    >
+                        前へ
+                    </span>
+                <?php endif; ?>
+
+                <div class="pagination__pages">
+                    <?php for ($pageNumber = 1; $pageNumber <= $totalPages; $pageNumber++): ?>
+                        <?php if ($pageNumber === $page): ?>
+                            <span
+                                class="pagination__link pagination__link--current"
+                                aria-current="page"
+                            >
+                                <?= escape((string) $pageNumber) ?>
+                            </span>
+                        <?php else: ?>
+                            <a
+                                class="pagination__link"
+                                href="<?= escape(
+                                    $buildPageUrl(
+                                        $pageNumber,
+                                        $sort
+                                    )
+                                ) ?>"
+                            >
+                                <?= escape((string) $pageNumber) ?>
+                            </a>
+                        <?php endif; ?>
+                    <?php endfor; ?>
+                </div>
+
+                <?php if ($page < $totalPages): ?>
+                    <a
+                        class="pagination__link pagination__link--next"
+                        href="<?= escape(
+                            $buildPageUrl(
+                                $page + 1,
+                                $sort
+                            )
+                        ) ?>"
+                    >
+                        次へ
+                    </a>
+                <?php else: ?>
+                    <span
+                        class="pagination__link pagination__link--disabled"
+                        aria-disabled="true"
+                    >
+                        次へ
+                    </span>
+                <?php endif; ?>
+            </nav>
+        <?php endif; ?>
     <?php endif; ?>
 </section>
 
