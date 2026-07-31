@@ -890,3 +890,54 @@ textarea.form-control {
     transform: translateY(-8px);
     pointer-events: none;
 }
+/* ========================================
+   記事一覧の並び替え
+======================================== */
+
+.section-header > div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sort-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sort-form__label {
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #374151;
+}
+
+.sort-form__select {
+    width: auto;
+    min-width: 210px;
+    margin: 0;
+}
+
+@media (max-width: 767px) {
+    .section-header {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .section-header > div {
+        justify-content: space-between;
+    }
+
+    .sort-form {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .sort-form__select {
+        width: 100%;
+        min-width: 0;
+    }
+}

@@ -12,7 +12,30 @@ requireAdminLogin();
 
 $repository = new ArticleRepository($pdo);
 
-$articles = $repository->findAll();
+$sortOptions = [
+    'created_desc' => '作成日が新しい順',
+    'created_asc' => '作成日が古い順',
+    'updated_desc' => '更新日が新しい順',
+    'updated_asc' => '更新日が古い順',
+    'published_desc' => '公開日が新しい順',
+    'published_asc' => '公開日が古い順',
+    'title_asc' => 'タイトル昇順',
+    'title_desc' => 'タイトル降順',
+    'category_asc' => 'カテゴリ順',
+    'status_asc' => '公開記事を先に表示',
+    'status_desc' => '下書きを先に表示',
+];
+
+$sort = filter_input(INPUT_GET, 'sort');
+
+if (
+    !is_string($sort)
+    || !array_key_exists($sort, $sortOptions)
+) {
+    $sort = 'created_desc';
+}
+
+$articles = $repository->findAll($sort);
 
 $pageTitle = '記事管理';
 
@@ -51,13 +74,55 @@ require __DIR__ . '/../templates/admin-header.php';
 
 <section class="section">
     <div class="section-header">
-        <h2 class="section-title">
-            登録記事
-        </h2>
+        <div>
+            <h2 class="section-title">
+                登録記事
+            </h2>
 
-        <span class="text-muted">
-            <?= escape((string) count($articles)) ?>件
-        </span>
+            <span class="text-muted">
+                <?= escape((string) count($articles)) ?>件
+            </span>
+        </div>
+
+        <form
+            class="sort-form"
+            method="get"
+            action="article-list.php"
+        >
+            <label
+                class="sort-form__label"
+                for="sort"
+            >
+                並び順
+            </label>
+
+            <select
+                class="form-control sort-form__select"
+                id="sort"
+                name="sort"
+                onchange="this.form.submit()"
+            >
+                <?php foreach ($sortOptions as $value => $label): ?>
+                    <option
+                        value="<?= escape($value) ?>"
+                        <?= $sort === $value
+                            ? 'selected'
+                            : '' ?>
+                    >
+                        <?= escape($label) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
+            <noscript>
+                <button
+                    class="button button--small"
+                    type="submit"
+                >
+                    並び替え
+                </button>
+            </noscript>
+        </form>
     </div>
 
     <?php if ($articles === []): ?>
@@ -113,12 +178,16 @@ require __DIR__ . '/../templates/admin-header.php';
                                         未公開
                                     </span>
                                 <?php else: ?>
-                                    <?= escape((string) $article['published_at']) ?>
+                                    <?= escape(
+                                        (string) $article['published_at']
+                                    ) ?>
                                 <?php endif; ?>
                             </td>
 
                             <td>
-                                <?= escape((string) $article['updated_at']) ?>
+                                <?= escape(
+                                    (string) $article['updated_at']
+                                ) ?>
                             </td>
 
                             <td>

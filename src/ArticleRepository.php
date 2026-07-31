@@ -12,8 +12,11 @@ final class ArticleRepository
     /**
      * 管理画面用の記事一覧を取得する
      */
-    public function findAll(): array
-    {
+    public function findAll(
+        string $sort = 'created_desc'
+    ): array {
+        $orderBy = $this->getAdminOrderBy($sort);
+
         $sql = '
             SELECT
                 a.id,
@@ -23,17 +26,69 @@ final class ArticleRepository
                 c.slug AS category_slug,
                 a.status,
                 a.published_at,
+                a.created_at,
                 a.updated_at
             FROM articles AS a
             INNER JOIN categories AS c
                 ON c.id = a.category_id
-            ORDER BY a.created_at DESC
+            ORDER BY ' . $orderBy . '
         ';
 
         return $this
             ->pdo
             ->query($sql)
             ->fetchAll();
+    }
+
+    /**
+     * 管理画面の記事一覧で使用する並び順を返す
+     */
+    private function getAdminOrderBy(string $sort): string
+    {
+        $sortOptions = [
+            'created_desc' => 'a.created_at DESC, a.id DESC',
+            'created_asc' => 'a.created_at ASC, a.id ASC',
+            'updated_desc' => 'a.updated_at DESC, a.id DESC',
+            'updated_asc' => 'a.updated_at ASC, a.id ASC',
+            'published_desc' => '
+                a.published_at IS NULL ASC,
+                a.published_at DESC,
+                a.id DESC
+            ',
+            'published_asc' => '
+                a.published_at IS NULL ASC,
+                a.published_at ASC,
+                a.id ASC
+            ',
+            'title_asc' => 'a.title ASC, a.id ASC',
+            'title_desc' => 'a.title DESC, a.id DESC',
+            'category_asc' => '
+                c.name ASC,
+                a.title ASC,
+                a.id ASC
+            ',
+            'status_asc' => '
+                CASE
+                    WHEN a.status = \'published\' THEN 1
+                    WHEN a.status = \'draft\' THEN 2
+                    ELSE 3
+                END ASC,
+                a.updated_at DESC,
+                a.id DESC
+            ',
+            'status_desc' => '
+                CASE
+                    WHEN a.status = \'draft\' THEN 1
+                    WHEN a.status = \'published\' THEN 2
+                    ELSE 3
+                END ASC,
+                a.updated_at DESC,
+                a.id DESC
+            ',
+        ];
+
+        return $sortOptions[$sort]
+            ?? $sortOptions['created_desc'];
     }
 
     /**
