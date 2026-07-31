@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/helpers.php';
 require_once __DIR__ . '/../src/auth.php';
+require_once __DIR__ . '/../src/csrf.php';
 require_once __DIR__ . '/../src/CategoryRepository.php';
 
 requireAdminLogin();
@@ -12,140 +13,117 @@ requireAdminLogin();
 $repository = new CategoryRepository($pdo);
 
 $categories = $repository->findAll();
+
+$pageTitle = 'カテゴリ管理';
+
+require __DIR__ . '/../templates/admin-header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
+<div class="page-header">
+    <div class="page-header__content">
+        <h1 class="page-title">
+            カテゴリ管理
+        </h1>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+        <p class="page-description">
+            記事を分類するカテゴリの追加、編集、削除ができます。
+        </p>
+    </div>
 
-    <title>カテゴリ管理｜蹴練場 管理画面</title>
+    <div class="page-actions">
+        <a
+            class="button button--outline"
+            href="article-list.php"
+        >
+            記事管理
+        </a>
 
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
+        <a
+            class="button"
+            href="category-create.php"
+        >
+            新しいカテゴリを追加
+        </a>
+    </div>
+</div>
 
-        th,
-        td {
-            border: 1px solid #ccc;
-            padding: 8px;
-        }
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">
+            登録カテゴリ
+        </h2>
 
-        th {
-            background: #f5f5f5;
-        }
+        <span class="text-muted">
+            <?= escape((string) count($categories)) ?>件
+        </span>
+    </div>
 
-        .actions {
-            white-space: nowrap;
-        }
-    </style>
-</head>
+    <?php if ($categories === []): ?>
+        <div class="card">
+            <p class="empty-message">
+                登録されているカテゴリはありません。
+            </p>
+        </div>
+    <?php else: ?>
+        <div class="table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>カテゴリ名</th>
+                        <th>スラッグ</th>
+                        <th>記事数</th>
+                        <th>作成日</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
 
-<body>
+                <tbody>
+                    <?php foreach ($categories as $category): ?>
+                        <tr>
+                            <td>
+                                <?= escape((string) $category['id']) ?>
+                            </td>
 
-<main>
+                            <td>
+                                <?= escape((string) $category['name']) ?>
+                            </td>
 
-<h1>カテゴリ管理</h1>
+                            <td>
+                                <?= escape((string) $category['slug']) ?>
+                            </td>
 
-<p>
-    <a href="index.php">ダッシュボードへ戻る</a>
-</p>
+                            <td>
+                                <?= escape((string) $category['article_count']) ?>件
+                            </td>
 
-<p>
-    <a href="article-list.php">記事管理へ戻る</a>
-</p>
+                            <td>
+                                <?= escape((string) $category['created_at']) ?>
+                            </td>
 
-<p>
-    <a href="category-create.php">
-        新しいカテゴリを追加
-    </a>
-</p>
+                            <td>
+                                <div class="table-actions">
+                                    <a
+                                        class="button button--small button--outline"
+                                        href="category-edit.php?id=<?= (int) $category['id'] ?>"
+                                    >
+                                        編集
+                                    </a>
 
-<table>
+                                    <a
+                                        class="button button--small button--danger"
+                                        href="category-delete.php?id=<?= (int) $category['id'] ?>"
+                                    >
+                                        削除
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
+</section>
 
-<thead>
-
-<tr>
-    <th>ID</th>
-    <th>カテゴリ名</th>
-    <th>スラッグ</th>
-    <th>記事数</th>
-    <th>作成日</th>
-    <th>操作</th>
-</tr>
-
-</thead>
-
-<tbody>
-
-<?php foreach ($categories as $category): ?>
-
-<tr>
-
-<td>
-    <?= escape((string) $category['id']) ?>
-</td>
-
-<td>
-    <?= escape($category['name']) ?>
-</td>
-
-<td>
-    <?= escape($category['slug']) ?>
-</td>
-
-<td>
-    <?= escape((string) $category['article_count']) ?>
-</td>
-
-<td>
-    <?= escape($category['created_at']) ?>
-</td>
-
-<td class="actions">
-
-<a href="category-edit.php?id=<?= escape((string) $category['id']) ?>">
-編集
-</a>
-
-|
-
-<a href="category-delete.php?id=<?= escape((string) $category['id']) ?>">
-削除
-</a>
-
-</td>
-
-</tr>
-
-<?php endforeach; ?>
-
-<?php if ($categories === []): ?>
-
-<tr>
-
-<td colspan="6">
-
-カテゴリはまだありません。
-
-</td>
-
-</tr>
-
-<?php endif; ?>
-
-</tbody>
-
-</table>
-
-</main>
-
-</body>
-</html>
+<?php require __DIR__ . '/../templates/admin-footer.php'; ?>

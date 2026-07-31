@@ -22,235 +22,239 @@ $categories = $categoryRepository->findAll();
 $categoryCount = count($categories);
 
 $latestArticles = $articleRepository->findLatest(5);
+
+$pageTitle = 'ダッシュボード';
+
+require __DIR__ . '/../templates/admin-header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
+<div class="page-header">
+    <div class="page-header__content">
+        <h1 class="page-title">
+            ダッシュボード
+        </h1>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>ダッシュボード｜蹴練場 管理画面</title>
-</head>
-
-<body>
-    <header>
-        <p>
-            蹴練場 管理画面
+        <p class="page-description">
+            記事とカテゴリの登録状況を確認できます。
         </p>
+    </div>
 
-        <nav aria-label="管理画面メニュー">
-            <ul>
-                <li>
-                    <a href="index.php">
-                        ダッシュボード
-                    </a>
-                </li>
-
-                <li>
-                    <a href="article-list.php">
-                        記事管理
-                    </a>
-                </li>
-
-                <li>
-                    <a href="category-list.php">
-                        カテゴリ管理
-                    </a>
-                </li>
-
-                <li>
-                    <a href="../public/articles.php">
-                        公開記事一覧
-                    </a>
-                </li>
-            </ul>
-        </nav>
-
-        <p>
-            ログイン中：
-            <?= escape($_SESSION['admin_username'] ?? '') ?>
-        </p>
-
-        <form
-            method="post"
-            action="logout.php"
+    <div class="page-actions">
+        <a
+            class="button"
+            href="article-create.php"
         >
-            <input
-                type="hidden"
-                name="csrf_token"
-                value="<?= escape(getCsrfToken()) ?>"
+            新しい記事を作成
+        </a>
+    </div>
+</div>
+
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">
+            サイトの状況
+        </h2>
+    </div>
+
+    <div class="dashboard-grid">
+        <article class="dashboard-card">
+            <h3 class="dashboard-card__title">
+                記事数
+            </h3>
+
+            <p class="dashboard-card__value">
+                <?= escape((string) $totalArticleCount) ?>
+            </p>
+
+            <p class="dashboard-card__description">
+                <a href="article-list.php">
+                    登録記事を確認
+                </a>
+            </p>
+        </article>
+
+        <article class="dashboard-card">
+            <h3 class="dashboard-card__title">
+                公開記事
+            </h3>
+
+            <p class="dashboard-card__value">
+                <?= escape((string) $publishedArticleCount) ?>
+            </p>
+
+            <p class="dashboard-card__description">
+                現在公開されている記事
+            </p>
+        </article>
+
+        <article class="dashboard-card">
+            <h3 class="dashboard-card__title">
+                下書き
+            </h3>
+
+            <p class="dashboard-card__value">
+                <?= escape((string) $draftArticleCount) ?>
+            </p>
+
+            <p class="dashboard-card__description">
+                公開前の記事
+            </p>
+        </article>
+
+        <article class="dashboard-card">
+            <h3 class="dashboard-card__title">
+                カテゴリ
+            </h3>
+
+            <p class="dashboard-card__value">
+                <?= escape((string) $categoryCount) ?>
+            </p>
+
+            <p class="dashboard-card__description">
+                <a href="category-list.php">
+                    登録カテゴリを確認
+                </a>
+            </p>
+        </article>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">
+            クイックメニュー
+        </h2>
+    </div>
+
+    <ul class="quick-menu">
+        <li>
+            <a
+                class="quick-menu__link"
+                href="article-create.php"
             >
+                新しい記事を作成
+            </a>
+        </li>
 
-            <button type="submit">
-                ログアウト
-            </button>
-        </form>
-    </header>
+        <li>
+            <a
+                class="quick-menu__link"
+                href="article-list.php"
+            >
+                記事を管理
+            </a>
+        </li>
 
-    <main>
-        <h1>ダッシュボード</h1>
+        <li>
+            <a
+                class="quick-menu__link"
+                href="category-create.php"
+            >
+                新しいカテゴリを作成
+            </a>
+        </li>
 
-        <section>
-            <h2>サイトの状況</h2>
+        <li>
+            <a
+                class="quick-menu__link"
+                href="category-list.php"
+            >
+                カテゴリを管理
+            </a>
+        </li>
+    </ul>
+</section>
 
-            <div>
-                <article>
-                    <h3>記事数</h3>
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">
+            最新の記事
+        </h2>
 
-                    <p>
-                        <?= $totalArticleCount ?>
-                    </p>
+        <?php if ($latestArticles !== []): ?>
+            <a href="article-list.php">
+                すべての記事を見る
+            </a>
+        <?php endif; ?>
+    </div>
 
-                    <p>
-                        <a href="article-list.php">
-                            記事を確認
-                        </a>
-                    </p>
-                </article>
+    <?php if ($latestArticles === []): ?>
+        <div class="card">
+            <p class="empty-message">
+                登録されている記事はありません。
+            </p>
+        </div>
+    <?php else: ?>
+        <div class="table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>タイトル</th>
+                        <th>カテゴリ</th>
+                        <th>公開状態</th>
+                        <th>公開日</th>
+                        <th>更新日</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
 
-                <article>
-                    <h3>公開記事</h3>
-
-                    <p>
-                        <?= $publishedArticleCount ?>
-                    </p>
-
-                    <p>
-                        現在公開されている記事
-                    </p>
-                </article>
-
-                <article>
-                    <h3>下書き</h3>
-
-                    <p>
-                        <?= $draftArticleCount ?>
-                    </p>
-
-                    <p>
-                        公開前の記事
-                    </p>
-                </article>
-
-                <article>
-                    <h3>カテゴリ</h3>
-
-                    <p>
-                        <?= $categoryCount ?>
-                    </p>
-
-                    <p>
-                        <a href="category-list.php">
-                            カテゴリを確認
-                        </a>
-                    </p>
-                </article>
-            </div>
-        </section>
-
-        <section>
-            <h2>クイックメニュー</h2>
-
-            <ul>
-                <li>
-                    <a href="article-create.php">
-                        新しい記事を作成
-                    </a>
-                </li>
-
-                <li>
-                    <a href="article-list.php">
-                        記事を管理
-                    </a>
-                </li>
-
-                <li>
-                    <a href="category-create.php">
-                        新しいカテゴリを作成
-                    </a>
-                </li>
-
-                <li>
-                    <a href="category-list.php">
-                        カテゴリを管理
-                    </a>
-                </li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>最新の記事</h2>
-
-            <?php if ($latestArticles === []): ?>
-                <p>
-                    登録されている記事はありません。
-                </p>
-            <?php else: ?>
-                <table border="1">
-                    <thead>
+                <tbody>
+                    <?php foreach ($latestArticles as $article): ?>
                         <tr>
-                            <th>タイトル</th>
-                            <th>カテゴリ</th>
-                            <th>公開状態</th>
-                            <th>公開日</th>
-                            <th>更新日</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
+                            <td>
+                                <?= escape((string) $article['title']) ?>
+                            </td>
 
-                    <tbody>
-                        <?php foreach ($latestArticles as $article): ?>
-                            <tr>
-                                <td>
-                                    <?= escape($article['title']) ?>
-                                </td>
+                            <td>
+                                <?= escape((string) $article['category']) ?>
+                            </td>
 
-                                <td>
-                                    <?= escape($article['category']) ?>
-                                </td>
+                            <td>
+                                <?php if ($article['status'] === 'published'): ?>
+                                    <span
+                                        class="status-badge status-badge--published"
+                                    >
+                                        公開
+                                    </span>
+                                <?php else: ?>
+                                    <span
+                                        class="status-badge status-badge--draft"
+                                    >
+                                        下書き
+                                    </span>
+                                <?php endif; ?>
+                            </td>
 
-                                <td>
-                                    <?= $article['status'] === 'published'
-                                        ? '公開'
-                                        : '下書き' ?>
-                                </td>
-
-                                <td>
-                                    <?php if ($article['published_at'] === null): ?>
+                            <td>
+                                <?php if ($article['published_at'] === null): ?>
+                                    <span class="text-muted">
                                         未公開
-                                    <?php else: ?>
-                                        <?= escape($article['published_at']) ?>
-                                    <?php endif; ?>
-                                </td>
+                                    </span>
+                                <?php else: ?>
+                                    <?= escape((string) $article['published_at']) ?>
+                                <?php endif; ?>
+                            </td>
 
-                                <td>
-                                    <?= escape($article['updated_at']) ?>
-                                </td>
+                            <td>
+                                <?= escape((string) $article['updated_at']) ?>
+                            </td>
 
-                                <td>
+                            <td>
+                                <div class="table-actions">
                                     <a
+                                        class="button button--small button--outline"
                                         href="article-edit.php?id=<?= (int) $article['id'] ?>"
                                     >
                                         編集
                                     </a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
+</section>
 
-                <p>
-                    <a href="article-list.php">
-                        すべての記事を見る
-                    </a>
-                </p>
-            <?php endif; ?>
-        </section>
-    </main>
-</body>
-</html>
+<?php require __DIR__ . '/../templates/admin-footer.php'; ?>

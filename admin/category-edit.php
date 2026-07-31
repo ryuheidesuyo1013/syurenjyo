@@ -32,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     requireValidCsrfToken();
 
     $formData = getCategoryFormData($_POST);
-
     $errors = validateCategoryData($formData);
 
     $category = array_merge(
@@ -62,64 +61,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $formAction = 'category-edit.php?id=' . $id;
 $submitLabel = '変更を保存';
+$pageTitle = 'カテゴリ編集';
+
+require __DIR__ . '/../templates/admin-header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="ja">
+<div class="page-header">
+    <div class="page-header__content">
+        <h1 class="page-title">
+            カテゴリ編集
+        </h1>
 
-<head>
+        <p class="page-description">
+            「<?= escape((string) $category['name']) ?>」の内容を編集します。
+        </p>
+    </div>
 
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
-<title>カテゴリ編集｜蹴練場 管理画面</title>
-
-</head>
-
-<body>
-
-<main>
-
-<h1>カテゴリ編集</h1>
-
-<p>
-
-<a href="category-list.php">
-
-カテゴリ管理へ戻る
-
-</a>
-
-</p>
-
-<?php if ($errors !== []): ?>
-
-<div>
-
-<p>入力内容を確認してください。</p>
-
-<ul>
-
-<?php foreach ($errors as $error): ?>
-
-<li><?= escape($error) ?></li>
-
-<?php endforeach; ?>
-
-</ul>
-
+    <div class="page-actions">
+        <a
+            class="button button--outline"
+            href="category-list.php"
+        >
+            カテゴリ管理へ戻る
+        </a>
+    </div>
 </div>
 
-<?php endif; ?>
+<section class="section">
+    <?php if ($errors !== []): ?>
+        <div
+            class="alert alert--error"
+            role="alert"
+        >
+            <p class="alert__title">
+                入力内容を確認してください
+            </p>
 
-<?php require __DIR__ . '/../templates/category-form.php'; ?>
+            <ul class="alert__list">
+                <?php foreach ($errors as $error): ?>
+                    <li>
+                        <?= escape($error) ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
 
-</main>
+    <div class="card form-card">
+        <?php require __DIR__ . '/../templates/category-form.php'; ?>
+    </div>
+</section>
 
-</body>
-
-</html>
+<?php require __DIR__ . '/../templates/admin-footer.php'; ?>

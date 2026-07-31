@@ -13,53 +13,62 @@ requireAdminLogin();
 $repository = new ArticleRepository($pdo);
 
 $articles = $repository->findAll();
+
+$pageTitle = '記事管理';
+
+require __DIR__ . '/../templates/admin-header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
+<div class="page-header">
+    <div class="page-header__content">
+        <h1 class="page-title">
+            記事管理
+        </h1>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>記事管理｜蹴練場 管理画面</title>
-</head>
-
-<body>
-    <main>
-        <h1>記事管理</h1>
-        <p>
-            ログイン中：
-            <?= escape($_SESSION['admin_username'] ?? '') ?>
+        <p class="page-description">
+            記事の作成、編集、削除、公開状態の確認ができます。
         </p>
+    </div>
 
-        <form method="post" action="logout.php">
-            <input
-                type="hidden"
-                name="csrf_token"
-                value="<?= escape(getCsrfToken()) ?>"
-            >
+    <div class="page-actions">
+        <a
+            class="button button--outline"
+            href="../public/articles.php"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            公開記事一覧
+        </a>
 
-            <button type="submit">
-                ログアウト
-            </button>
-        </form>
-        <p><a href="index.php">ダッシュボードへ戻る</a></p>
-        <p>
-            <a href="article-create.php">新しい記事を作成</a>
-        </p>
+        <a
+            class="button"
+            href="article-create.php"
+        >
+            新しい記事を作成
+        </a>
+    </div>
+</div>
 
-        <p>
-            <a href="../public/articles.php">公開記事一覧を見る</a>
-        </p>
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">
+            登録記事
+        </h2>
 
-        <?php if ($articles === []): ?>
-            <p>登録されている記事はありません。</p>
-        <?php else: ?>
-            <table border="1">
+        <span class="text-muted">
+            <?= escape((string) count($articles)) ?>件
+        </span>
+    </div>
+
+    <?php if ($articles === []): ?>
+        <div class="card">
+            <p class="empty-message">
+                登録されている記事はありません。
+            </p>
+        </div>
+    <?php else: ?>
+        <div class="table-container">
+            <table class="admin-table">
                 <thead>
                     <tr>
                         <th>タイトル</th>
@@ -75,62 +84,84 @@ $articles = $repository->findAll();
                     <?php foreach ($articles as $article): ?>
                         <tr>
                             <td>
-                                <?= escape($article['title']) ?>
+                                <?= escape((string) $article['title']) ?>
                             </td>
 
                             <td>
-                                <?= escape($article['category']) ?>
+                                <?= escape((string) $article['category']) ?>
                             </td>
 
                             <td>
-                                <?= $article['status'] === 'published'
-                                    ? '公開'
-                                    : '下書き' ?>
-                            </td>
-
-                            <td>
-                                <?= escape($article['published_at']) ?>
-                            </td>
-
-                            <td>
-                                <?= escape($article['updated_at']) ?>
-                            </td>
-
-                            <td>
-                                <a
-                                    href="article-edit.php?id=<?= (int) $article['id'] ?>"
-                                >
-                                    編集
-                                </a>
-
-                                <form
-                                    method="post"
-                                    action="article-delete.php"
-                                    style="display: inline;"
-                                    onsubmit="return confirm('この記事を削除しますか？');"
-                                >
-                                    <input
-                                        type="hidden"
-                                        name="csrf_token"
-                                        value="<?= escape(getCsrfToken()) ?>"
+                                <?php if ($article['status'] === 'published'): ?>
+                                    <span
+                                        class="status-badge status-badge--published"
                                     >
-
-                                    <input
-                                        type="hidden"
-                                        name="id"
-                                        value="<?= (int) $article['id'] ?>"
+                                        公開
+                                    </span>
+                                <?php else: ?>
+                                    <span
+                                        class="status-badge status-badge--draft"
                                     >
+                                        下書き
+                                    </span>
+                                <?php endif; ?>
+                            </td>
 
-                                    <button type="submit">
-                                        削除
-                                    </button>
-                                </form>
+                            <td>
+                                <?php if ($article['published_at'] === null): ?>
+                                    <span class="text-muted">
+                                        未公開
+                                    </span>
+                                <?php else: ?>
+                                    <?= escape((string) $article['published_at']) ?>
+                                <?php endif; ?>
+                            </td>
+
+                            <td>
+                                <?= escape((string) $article['updated_at']) ?>
+                            </td>
+
+                            <td>
+                                <div class="table-actions">
+                                    <a
+                                        class="button button--small button--outline"
+                                        href="article-edit.php?id=<?= (int) $article['id'] ?>"
+                                    >
+                                        編集
+                                    </a>
+
+                                    <form
+                                        method="post"
+                                        action="article-delete.php"
+                                        onsubmit="return confirm('この記事を削除しますか？この操作は元に戻せません。');"
+                                    >
+                                        <input
+                                            type="hidden"
+                                            name="csrf_token"
+                                            value="<?= escape(getCsrfToken()) ?>"
+                                        >
+
+                                        <input
+                                            type="hidden"
+                                            name="id"
+                                            value="<?= (int) $article['id'] ?>"
+                                        >
+
+                                        <button
+                                            class="button button--small button--danger"
+                                            type="submit"
+                                        >
+                                            削除
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
-        <?php endif; ?>
-    </main>
-</body>
-</html>
+        </div>
+    <?php endif; ?>
+</section>
+
+<?php require __DIR__ . '/../templates/admin-footer.php'; ?>
