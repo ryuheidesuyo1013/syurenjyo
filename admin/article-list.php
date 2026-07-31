@@ -7,10 +7,14 @@ require_once __DIR__ . '/../src/helpers.php';
 require_once __DIR__ . '/../src/auth.php';
 require_once __DIR__ . '/../src/csrf.php';
 require_once __DIR__ . '/../src/ArticleRepository.php';
+require_once __DIR__ . '/../src/CategoryRepository.php';
 
 requireAdminLogin();
 
 $repository = new ArticleRepository($pdo);
+$categoryRepository = new CategoryRepository($pdo);
+
+$categories = $categoryRepository->findAll();
 
 $sortOptions = [
     'created_desc' => '作成日が新しい順',
@@ -58,11 +62,40 @@ if (
     $status = '';
 }
 
+$categoryId = filter_input(
+    INPUT_GET,
+    'category',
+    FILTER_VALIDATE_INT,
+    [
+        'options' => [
+            'min_range' => 1,
+        ],
+    ]
+);
+
+if (!is_int($categoryId)) {
+    $categoryId = 0;
+}
+
+$categoryExists = false;
+
+foreach ($categories as $category) {
+    if ((int) $category['id'] === $categoryId) {
+        $categoryExists = true;
+        break;
+    }
+}
+
+if (!$categoryExists) {
+    $categoryId = 0;
+}
+
 $perPage = 10;
 
 $totalArticles = $repository->countAdminSearch(
     $keyword,
-    $status
+    $status,
+    $categoryId
 );
 $totalPages = max(
     1,
@@ -95,7 +128,8 @@ $articles = $repository->findAll(
     $perPage,
     $offset,
     $keyword,
-    $status
+    $status,
+    $categoryId
 );
 
 $firstArticleNumber = $totalArticles === 0
@@ -108,13 +142,15 @@ $lastArticleNumber = min(
 );
 
 $hasSearchConditions = $keyword !== ''
-    || $status !== '';
+    || $status !== ''
+    || $categoryId > 0;
 
 $buildPageUrl = static function (
     int $targetPage,
     string $sort,
     string $keyword,
-    string $status
+    string $status,
+    int $categoryId
 ): string {
     $query = [
         'sort' => $sort,
@@ -127,6 +163,10 @@ $buildPageUrl = static function (
 
     if ($status !== '') {
         $query['status'] = $status;
+    }
+
+    if ($categoryId > 0) {
+        $query['category'] = $categoryId;
     }
 
     return 'article-list.php?' . http_build_query($query);
@@ -216,6 +256,36 @@ require __DIR__ . '/../templates/admin-header.php';
                 </select>
             </div>
 
+            <div class="article-filter-form__field">
+                <label
+                    class="form-label"
+                    for="category"
+                >
+                    カテゴリ
+                </label>
+
+                <select
+                    class="form-control"
+                    id="category"
+                    name="category"
+                >
+                    <option value="">
+                        すべてのカテゴリ
+                    </option>
+
+                    <?php foreach ($categories as $category): ?>
+                        <option
+                            value="<?= (int) $category['id'] ?>"
+                            <?= $categoryId === (int) $category['id']
+                                ? 'selected'
+                                : '' ?>
+                        >
+                            <?= escape((string) $category['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
             <input
                 type="hidden"
                 name="sort"
@@ -281,6 +351,14 @@ require __DIR__ . '/../templates/admin-header.php';
                     type="hidden"
                     name="status"
                     value="<?= escape($status) ?>"
+                >
+            <?php endif; ?>
+
+            <?php if ($categoryId > 0): ?>
+                <input
+                    type="hidden"
+                    name="category"
+                    value="<?= $categoryId ?>"
                 >
             <?php endif; ?>
 
@@ -443,7 +521,9 @@ require __DIR__ . '/../templates/admin-header.php';
                                 $page - 1,
                                 $sort,
                                 $keyword,
-                                $status                            )
+                                $status,
+                                $categoryId
+                            )
                         ) ?>"
                     >
                         前へ
@@ -474,7 +554,9 @@ require __DIR__ . '/../templates/admin-header.php';
                                         $pageNumber,
                                         $sort,
                                         $keyword,
-                                        $status                                    )
+                                        $status,
+                                        $categoryId
+                                    )
                                 ) ?>"
                             >
                                 <?= escape((string) $pageNumber) ?>
@@ -491,7 +573,9 @@ require __DIR__ . '/../templates/admin-header.php';
                                 $page + 1,
                                 $sort,
                                 $keyword,
-                                $status                            )
+                                $status,
+                                $categoryId
+                            )
                         ) ?>"
                     >
                         次へ

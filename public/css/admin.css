@@ -1046,7 +1046,8 @@ textarea.form-control {
     display: grid;
     grid-template-columns:
         minmax(240px, 1fr)
-        minmax(160px, 220px)
+        minmax(150px, 200px)
+        minmax(170px, 220px)
         auto;
     align-items: end;
     gap: 16px;
@@ -1075,7 +1076,8 @@ textarea.form-control {
     .article-filter-form {
         grid-template-columns:
             minmax(0, 1fr)
-            minmax(160px, 220px);
+            minmax(150px, 200px)
+            minmax(170px, 220px);
     }
 
     .article-filter-form__actions {

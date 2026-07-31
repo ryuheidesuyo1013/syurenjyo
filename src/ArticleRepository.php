@@ -17,7 +17,8 @@ final class ArticleRepository
         int $limit = 10,
         int $offset = 0,
         string $keyword = '',
-        string $status = ''
+        string $status = '',
+        int $categoryId = 0
     ): array {
         $orderBy = $this->getAdminOrderBy($sort);
 
@@ -67,6 +68,14 @@ final class ArticleRepository
             $params[':status'] = $status;
         }
 
+        if ($categoryId > 0) {
+            $sql .= '
+                AND a.category_id = :category_id
+            ';
+
+            $params[':category_id'] = $categoryId;
+        }
+
         $sql .= '
             ORDER BY ' . $orderBy . '
             LIMIT :limit
@@ -76,10 +85,14 @@ final class ArticleRepository
         $stmt = $this->pdo->prepare($sql);
 
         foreach ($params as $name => $value) {
+            $parameterType = $name === ':category_id'
+                ? PDO::PARAM_INT
+                : PDO::PARAM_STR;
+
             $stmt->bindValue(
                 $name,
                 $value,
-                PDO::PARAM_STR
+                $parameterType
             );
         }
 
@@ -463,7 +476,8 @@ final class ArticleRepository
      */
     public function countAdminSearch(
         string $keyword = '',
-        string $status = ''
+        string $status = '',
+        int $categoryId = 0
     ): int {
         $sql = '
             SELECT COUNT(*)
@@ -497,9 +511,29 @@ final class ArticleRepository
             $params[':status'] = $status;
         }
 
+        if ($categoryId > 0) {
+            $sql .= '
+                AND a.category_id = :category_id
+            ';
+
+            $params[':category_id'] = $categoryId;
+        }
+
         $stmt = $this->pdo->prepare($sql);
 
-        $stmt->execute($params);
+        foreach ($params as $name => $value) {
+            $parameterType = $name === ':category_id'
+                ? PDO::PARAM_INT
+                : PDO::PARAM_STR;
+
+            $stmt->bindValue(
+                $name,
+                $value,
+                $parameterType
+            );
+        }
+
+        $stmt->execute();
 
         return (int) $stmt->fetchColumn();
     }
