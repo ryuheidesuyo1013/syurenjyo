@@ -26,6 +26,12 @@ $sortOptions = [
     'status_desc' => '下書きを先に表示',
 ];
 
+$statusOptions = [
+    '' => 'すべて',
+    'published' => '公開',
+    'draft' => '下書き',
+];
+
 $sort = filter_input(INPUT_GET, 'sort');
 
 if (
@@ -35,8 +41,29 @@ if (
     $sort = 'created_desc';
 }
 
+$keyword = filter_input(INPUT_GET, 'keyword');
+
+if (!is_string($keyword)) {
+    $keyword = '';
+}
+
+$keyword = trim($keyword);
+
+$status = filter_input(INPUT_GET, 'status');
+
+if (
+    !is_string($status)
+    || !array_key_exists($status, $statusOptions)
+) {
+    $status = '';
+}
+
 $perPage = 10;
-$totalArticles = $repository->countAll();
+
+$totalArticles = $repository->countAdminSearch(
+    $keyword,
+    $status
+);
 $totalPages = max(
     1,
     (int) ceil($totalArticles / $perPage)
@@ -66,7 +93,9 @@ $offset = ($page - 1) * $perPage;
 $articles = $repository->findAll(
     $sort,
     $perPage,
-    $offset
+    $offset,
+    $keyword,
+    $status
 );
 
 $firstArticleNumber = $totalArticles === 0
@@ -78,14 +107,29 @@ $lastArticleNumber = min(
     $totalArticles
 );
 
+$hasSearchConditions = $keyword !== ''
+    || $status !== '';
+
 $buildPageUrl = static function (
     int $targetPage,
-    string $sort
+    string $sort,
+    string $keyword,
+    string $status
 ): string {
-    return 'article-list.php?' . http_build_query([
+    $query = [
         'sort' => $sort,
         'page' => $targetPage,
-    ]);
+    ];
+
+    if ($keyword !== '') {
+        $query['keyword'] = $keyword;
+    }
+
+    if ($status !== '') {
+        $query['status'] = $status;
+    }
+
+    return 'article-list.php?' . http_build_query($query);
 };
 
 $pageTitle = '記事管理';
@@ -124,6 +168,86 @@ require __DIR__ . '/../templates/admin-header.php';
 </div>
 
 <section class="section">
+    <div class="card article-filter-card">
+        <form
+            class="article-filter-form"
+            method="get"
+            action="article-list.php"
+        >
+            <div class="article-filter-form__field">
+                <label
+                    class="form-label"
+                    for="keyword"
+                >
+                    キーワード
+                </label>
+
+                <input
+                    class="form-control"
+                    id="keyword"
+                    name="keyword"
+                    type="search"
+                    value="<?= escape($keyword) ?>"
+                    placeholder="タイトル・概要・本文を検索"
+                >
+            </div>
+
+            <div class="article-filter-form__field">
+                <label
+                    class="form-label"
+                    for="status"
+                >
+                    公開状態
+                </label>
+
+                <select
+                    class="form-control"
+                    id="status"
+                    name="status"
+                >
+                    <?php foreach ($statusOptions as $value => $label): ?>
+                        <option
+                            value="<?= escape($value) ?>"
+                            <?= $status === $value ? 'selected' : '' ?>
+                        >
+                            <?= escape($label) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <input
+                type="hidden"
+                name="sort"
+                value="<?= escape($sort) ?>"
+            >
+
+            <div class="article-filter-form__actions">
+                <button
+                    class="button"
+                    type="submit"
+                >
+                    検索
+                </button>
+
+                <?php if ($hasSearchConditions): ?>
+                    <a
+                        class="button button--outline"
+                        href="article-list.php?<?= escape(
+                            http_build_query([
+                                'sort' => $sort,
+                            ])
+                        ) ?>"
+                    >
+                        条件をリセット
+                    </a>
+                <?php endif; ?>
+            </div>
+        </form>
+    </div>
+</section>
+
+<section class="section">
     <div class="section-header">
         <div>
             <h2 class="section-title">
@@ -144,6 +268,22 @@ require __DIR__ . '/../templates/admin-header.php';
             method="get"
             action="article-list.php"
         >
+            <?php if ($keyword !== ''): ?>
+                <input
+                    type="hidden"
+                    name="keyword"
+                    value="<?= escape($keyword) ?>"
+                >
+            <?php endif; ?>
+
+            <?php if ($status !== ''): ?>
+                <input
+                    type="hidden"
+                    name="status"
+                    value="<?= escape($status) ?>"
+                >
+            <?php endif; ?>
+
             <label
                 class="sort-form__label"
                 for="sort"
@@ -183,7 +323,11 @@ require __DIR__ . '/../templates/admin-header.php';
     <?php if ($articles === []): ?>
         <div class="card">
             <p class="empty-message">
-                登録されている記事はありません。
+                <?php if ($hasSearchConditions): ?>
+                    条件に一致する記事はありません。
+                <?php else: ?>
+                    登録されている記事はありません。
+                <?php endif; ?>
             </p>
         </div>
     <?php else: ?>
@@ -297,8 +441,9 @@ require __DIR__ . '/../templates/admin-header.php';
                         href="<?= escape(
                             $buildPageUrl(
                                 $page - 1,
-                                $sort
-                            )
+                                $sort,
+                                $keyword,
+                                $status                            )
                         ) ?>"
                     >
                         前へ
@@ -327,8 +472,9 @@ require __DIR__ . '/../templates/admin-header.php';
                                 href="<?= escape(
                                     $buildPageUrl(
                                         $pageNumber,
-                                        $sort
-                                    )
+                                        $sort,
+                                        $keyword,
+                                        $status                                    )
                                 ) ?>"
                             >
                                 <?= escape((string) $pageNumber) ?>
@@ -343,8 +489,9 @@ require __DIR__ . '/../templates/admin-header.php';
                         href="<?= escape(
                             $buildPageUrl(
                                 $page + 1,
-                                $sort
-                            )
+                                $sort,
+                                $keyword,
+                                $status                            )
                         ) ?>"
                     >
                         次へ

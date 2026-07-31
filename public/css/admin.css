@@ -1033,3 +1033,71 @@ textarea.form-control {
         order: 2;
     }
 }
+
+/* ========================================
+   記事一覧の検索・絞り込み
+======================================== */
+
+.article-filter-card {
+    padding: 20px 24px;
+}
+
+.article-filter-form {
+    display: grid;
+    grid-template-columns:
+        minmax(240px, 1fr)
+        minmax(160px, 220px)
+        auto;
+    align-items: end;
+    gap: 16px;
+}
+
+.article-filter-form__field {
+    min-width: 0;
+}
+
+.article-filter-form__field .form-label {
+    margin-bottom: 7px;
+}
+
+.article-filter-form__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.article-filter-form__actions .button {
+    white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+    .article-filter-form {
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(160px, 220px);
+    }
+
+    .article-filter-form__actions {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 640px) {
+    .article-filter-card {
+        padding: 18px;
+    }
+
+    .article-filter-form {
+        grid-template-columns: 1fr;
+    }
+
+    .article-filter-form__actions {
+        grid-column: auto;
+        flex-direction: column;
+    }
+
+    .article-filter-form__actions .button {
+        width: 100%;
+    }
+}
