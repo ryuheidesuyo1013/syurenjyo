@@ -51,74 +51,175 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+$pageTitle = 'カテゴリ削除';
+
+require __DIR__ . '/../templates/admin-header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
+<div class="page-header">
+    <div class="page-header__content">
+        <h1 class="page-title">
+            カテゴリ削除
+        </h1>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>カテゴリ削除｜蹴練場 管理画面</title>
-</head>
-
-<body>
-    <main>
-        <h1>カテゴリ削除</h1>
-
-        <p>
-            <a href="category-list.php">カテゴリ管理へ戻る</a>
+        <p class="page-description">
+            削除するカテゴリの情報を確認してください。
         </p>
+    </div>
 
-        <?php if ($errors !== []): ?>
-            <div>
-                <p>カテゴリを削除できませんでした。</p>
+    <div class="page-actions">
+        <a
+            class="button button--outline"
+            href="category-list.php"
+        >
+            カテゴリ管理へ戻る
+        </a>
+    </div>
+</div>
 
-                <ul>
-                    <?php foreach ($errors as $error): ?>
-                        <li><?= escape($error) ?></li>
-                    <?php endforeach; ?>
-                </ul>
+<section class="section">
+    <?php if ($errors !== []): ?>
+        <div
+            class="alert alert--error"
+            role="alert"
+        >
+            <p class="alert__title">
+                カテゴリを削除できませんでした
+            </p>
+
+            <ul class="alert__list">
+                <?php foreach ($errors as $error): ?>
+                    <li>
+                        <?= escape($error) ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+    <div class="card delete-card">
+        <div class="delete-card__header">
+            <h2 class="section-title">
+                削除対象
+            </h2>
+
+            <?php if ($articleCount > 0): ?>
+                <span class="status-badge status-badge--draft">
+                    削除不可
+                </span>
+            <?php else: ?>
+                <span class="status-badge status-badge--danger">
+                    削除確認
+                </span>
+            <?php endif; ?>
+        </div>
+
+        <dl class="detail-list">
+            <div class="detail-list__item">
+                <dt class="detail-list__term">
+                    カテゴリ名
+                </dt>
+
+                <dd class="detail-list__description">
+                    <?= escape((string) $category['name']) ?>
+                </dd>
             </div>
-        <?php endif; ?>
 
-        <dl>
-            <dt>カテゴリ名</dt>
-            <dd><?= escape($category['name']) ?></dd>
+            <div class="detail-list__item">
+                <dt class="detail-list__term">
+                    スラッグ
+                </dt>
 
-            <dt>スラッグ</dt>
-            <dd><?= escape($category['slug']) ?></dd>
+                <dd class="detail-list__description">
+                    <?= escape((string) $category['slug']) ?>
+                </dd>
+            </div>
 
-            <dt>登録記事数</dt>
-            <dd><?= escape((string) $articleCount) ?>件</dd>
+            <div class="detail-list__item">
+                <dt class="detail-list__term">
+                    登録記事数
+                </dt>
+
+                <dd class="detail-list__description">
+                    <?= escape((string) $articleCount) ?>件
+                </dd>
+            </div>
         </dl>
 
         <?php if ($articleCount > 0): ?>
-            <p>
-                このカテゴリには記事が登録されているため削除できません。
-                先に記事のカテゴリを変更してください。
-            </p>
-        <?php else: ?>
-            <p>
-                このカテゴリを削除します。削除後は元に戻せません。
-            </p>
+            <div
+                class="alert alert--warning"
+                role="alert"
+            >
+                <p class="alert__title">
+                    このカテゴリは削除できません
+                </p>
 
-            <form method="post" action="category-delete.php?id=<?= escape((string) $id) ?>">
+                <p>
+                    このカテゴリには記事が登録されています。
+                    削除するには、先に対象記事のカテゴリを変更してください。
+                </p>
+            </div>
+
+            <div class="form-actions">
+                <a
+                    class="button button--outline"
+                    href="article-list.php"
+                >
+                    記事管理を確認
+                </a>
+
+                <a
+                    class="button"
+                    href="category-list.php"
+                >
+                    カテゴリ管理へ戻る
+                </a>
+            </div>
+        <?php else: ?>
+            <div
+                class="alert alert--warning"
+                role="alert"
+            >
+                <p class="alert__title">
+                    この操作は元に戻せません
+                </p>
+
+                <p>
+                    「<?= escape((string) $category['name']) ?>」を完全に削除します。
+                </p>
+            </div>
+
+            <form
+                method="post"
+                action="category-delete.php?id=<?= (int) $id ?>"
+                onsubmit="return confirm('このカテゴリを削除しますか？この操作は元に戻せません。');"
+            >
                 <input
                     type="hidden"
                     name="csrf_token"
                     value="<?= escape(getCsrfToken()) ?>"
                 >
 
-                <button type="submit">
-                    カテゴリを削除
-                </button>
+                <div class="form-actions">
+                    <button
+                        class="button button--danger"
+                        type="submit"
+                    >
+                        カテゴリを削除
+                    </button>
+
+                    <a
+                        class="button button--outline"
+                        href="category-list.php"
+                    >
+                        キャンセル
+                    </a>
+                </div>
             </form>
         <?php endif; ?>
-    </main>
-</body>
-</html>
+    </div>
+</section>
+
+<?php require __DIR__ . '/../templates/admin-footer.php'; ?>
