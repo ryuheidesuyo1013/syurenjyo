@@ -44,12 +44,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = '選択されたカテゴリが存在しません。';
     }
 
-    $article = array_merge($article, $formData);
+    $article = array_merge(
+        $article,
+        $formData
+    );
 
     if ($errors === []) {
         if ($article['status'] === 'published') {
             $publishedAt = $article['published_at'] !== null
-                ? $article['published_at']
+                ? (string) $article['published_at']
                 : date('Y-m-d H:i:s');
         } else {
             $publishedAt = null;
@@ -76,42 +79,79 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $formAction = 'article-edit.php?id=' . $id;
 $submitLabel = '変更を保存';
+$pageTitle = '記事編集';
+
+require __DIR__ . '/../templates/admin-header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
+<div class="page-header">
+    <div class="page-header__content">
+        <h1 class="page-title">
+            記事編集
+        </h1>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>記事編集｜蹴練場 管理画面</title>
-</head>
-
-<body>
-    <main>
-        <h1>記事編集</h1>
-
-        <p>
-            <a href="article-list.php">記事管理へ戻る</a>
+        <p class="page-description">
+            「<?= escape((string) $article['title']) ?>」の内容を編集します。
         </p>
+    </div>
 
-        <?php if ($errors !== []): ?>
-            <div>
-                <p>入力内容を確認してください。</p>
+    <div class="page-actions">
+        <a
+            class="button button--outline"
+            href="article-list.php"
+        >
+            記事管理へ戻る
+        </a>
+    </div>
+</div>
 
-                <ul>
-                    <?php foreach ($errors as $error): ?>
-                        <li><?= escape($error) ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        <?php endif; ?>
+<section class="section">
+    <?php if ($categories === []): ?>
+        <div
+            class="alert alert--warning"
+            role="alert"
+        >
+            <p class="alert__title">
+                利用できるカテゴリがありません
+            </p>
 
+            <p>
+                記事を保存するには、カテゴリを登録してください。
+            </p>
+
+            <p>
+                <a
+                    class="button button--small"
+                    href="category-create.php"
+                >
+                    カテゴリを作成
+                </a>
+            </p>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($errors !== []): ?>
+        <div
+            class="alert alert--error"
+            role="alert"
+        >
+            <p class="alert__title">
+                入力内容を確認してください
+            </p>
+
+            <ul class="alert__list">
+                <?php foreach ($errors as $error): ?>
+                    <li>
+                        <?= escape($error) ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+    <div class="card form-card">
         <?php require __DIR__ . '/../templates/article-form.php'; ?>
-    </main>
-</body>
-</html>
+    </div>
+</section>
+
+<?php require __DIR__ . '/../templates/admin-footer.php'; ?>
