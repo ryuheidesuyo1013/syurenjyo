@@ -826,3 +826,67 @@ textarea.form-control {
         gap: 6px;
     }
 }
+/* ========================================
+   Flash message
+======================================== */
+
+.alert--success {
+    background: #ecfdf5;
+    border-color: #a7f3d0;
+    color: #065f46;
+}
+
+.alert--info {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1e40af;
+}
+
+.flash-message {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+}
+
+.flash-message__content {
+    min-width: 0;
+}
+
+.flash-message__text {
+    margin: 4px 0 0;
+}
+
+.flash-message__close {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    color: currentColor;
+    font: inherit;
+    font-size: 22px;
+    line-height: 1;
+    background: transparent;
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.flash-message__close:hover {
+    background: rgba(15, 23, 42, 0.08);
+}
+
+.flash-message__close:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+.flash-message--hidden {
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+}

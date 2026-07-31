@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/../src/flash.php';
+
 if (!isset($pageTitle) || !is_string($pageTitle)) {
     $pageTitle = '管理画面';
 }
@@ -49,7 +51,10 @@ $isCategoryPage = in_array($currentPage, $categoryPages, true);
 
 <body>
     <div class="admin-layout">
-        <aside id="admin-sidebar" class="admin-sidebar">
+        <aside
+            id="admin-sidebar"
+            class="admin-sidebar"
+        >
             <div class="admin-sidebar__header">
                 <a
                     class="admin-logo"
@@ -175,3 +180,4 @@ $isCategoryPage = in_array($currentPage, $categoryPages, true);
             </header>
 
             <main class="admin-main">
+                <?php require __DIR__ . '/flash-message.php'; ?>
