@@ -10,12 +10,17 @@ final class ArticleRepository
     }
 
     /**
-     * 管理画面用の記事一覧を取得する
+     * 管理画面用の記事一覧を、指定された範囲だけ取得する
      */
     public function findAll(
-        string $sort = 'created_desc'
+        string $sort = 'created_desc',
+        int $limit = 10,
+        int $offset = 0
     ): array {
         $orderBy = $this->getAdminOrderBy($sort);
+
+        $limit = max(1, $limit);
+        $offset = max(0, $offset);
 
         $sql = '
             SELECT
@@ -32,12 +37,27 @@ final class ArticleRepository
             INNER JOIN categories AS c
                 ON c.id = a.category_id
             ORDER BY ' . $orderBy . '
+            LIMIT :limit
+            OFFSET :offset
         ';
 
-        return $this
-            ->pdo
-            ->query($sql)
-            ->fetchAll();
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue(
+            ':limit',
+            $limit,
+            PDO::PARAM_INT
+        );
+
+        $stmt->bindValue(
+            ':offset',
+            $offset,
+            PDO::PARAM_INT
+        );
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
     }
 
     /**
