@@ -6,6 +6,7 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/helpers.php';
 require_once __DIR__ . '/../src/auth.php';
 require_once __DIR__ . '/../src/csrf.php';
+require_once __DIR__ . '/../src/flash.php';
 require_once __DIR__ . '/../src/http.php';
 require_once __DIR__ . '/../src/category-validator.php';
 require_once __DIR__ . '/../src/CategoryRepository.php';
@@ -45,6 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $id,
                 $category['name'],
                 $category['slug']
+            );
+
+            setFlashMessage(
+                'カテゴリを更新しました。',
+                'success'
             );
 
             header('Location: category-list.php');

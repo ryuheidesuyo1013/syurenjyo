@@ -6,6 +6,7 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/helpers.php';
 require_once __DIR__ . '/../src/auth.php';
 require_once __DIR__ . '/../src/csrf.php';
+require_once __DIR__ . '/../src/flash.php';
 require_once __DIR__ . '/../src/category-validator.php';
 require_once __DIR__ . '/../src/CategoryRepository.php';
 
@@ -27,6 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $repository->create(
                 $category['name'],
                 $category['slug']
+            );
+
+            setFlashMessage(
+                'カテゴリを作成しました。',
+                'success'
             );
 
             header('Location: category-list.php');

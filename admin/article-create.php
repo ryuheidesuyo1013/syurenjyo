@@ -6,6 +6,7 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/helpers.php';
 require_once __DIR__ . '/../src/auth.php';
 require_once __DIR__ . '/../src/csrf.php';
+require_once __DIR__ . '/../src/flash.php';
 require_once __DIR__ . '/../src/article-validator.php';
 require_once __DIR__ . '/../src/ArticleRepository.php';
 require_once __DIR__ . '/../src/CategoryRepository.php';
@@ -41,6 +42,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $repository->create(
                 $article,
                 $publishedAt
+            );
+
+            setFlashMessage(
+                '記事を作成しました。',
+                'success'
             );
 
             header('Location: article-list.php');
