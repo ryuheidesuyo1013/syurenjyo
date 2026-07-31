@@ -344,6 +344,102 @@ final class ArticleRepository
     }
 
     /**
+     * 登録されているすべての記事数を取得する
+     */
+    public function countAll(): int
+    {
+        $sql = '
+            SELECT COUNT(*)
+            FROM articles
+        ';
+
+        return (int) $this
+            ->pdo
+            ->query($sql)
+            ->fetchColumn();
+    }
+
+    /**
+     * 現在公開されている記事数を取得する
+     */
+    public function countPublished(): int
+    {
+        $sql = '
+            SELECT COUNT(*)
+            FROM articles
+            WHERE status = :status
+              AND published_at IS NOT NULL
+              AND published_at <= NOW()
+        ';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute([
+            ':status' => 'published',
+        ]);
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
+     * 下書きの記事数を取得する
+     */
+    public function countDraft(): int
+    {
+        $sql = '
+            SELECT COUNT(*)
+            FROM articles
+            WHERE status = :status
+        ';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute([
+            ':status' => 'draft',
+        ]);
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
+     * 管理画面のダッシュボードに表示する最新記事を取得する
+     */
+    public function findLatest(int $limit = 5): array
+    {
+        $limit = max(1, $limit);
+
+        $sql = '
+            SELECT
+                a.id,
+                a.title,
+                a.category_id,
+                c.name AS category,
+                c.slug AS category_slug,
+                a.status,
+                a.published_at,
+                a.created_at,
+                a.updated_at
+            FROM articles AS a
+            INNER JOIN categories AS c
+                ON c.id = a.category_id
+            ORDER BY a.created_at DESC
+            LIMIT :limit
+        ';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue(
+            ':limit',
+            $limit,
+            PDO::PARAM_INT
+        );
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    /**
      * 記事を作成する
      */
     public function create(

@@ -10,7 +10,7 @@ require_once __DIR__ . '/../src/csrf.php';
 startSession();
 
 if (isAdminLoggedIn()) {
-    header('Location: article-list.php');
+    header('Location: index.php');
     exit;
 }
 

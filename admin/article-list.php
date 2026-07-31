@@ -47,6 +47,7 @@ $articles = $repository->findAll();
                 ログアウト
             </button>
         </form>
+        <p><a href="index.php">ダッシュボードへ戻る</a></p>
         <p>
             <a href="article-create.php">新しい記事を作成</a>
         </p>

@@ -55,6 +55,10 @@ $categories = $repository->findAll();
 <h1>カテゴリ管理</h1>
 
 <p>
+    <a href="index.php">ダッシュボードへ戻る</a>
+</p>
+
+<p>
     <a href="article-list.php">記事管理へ戻る</a>
 </p>
 
