@@ -10,12 +10,14 @@ final class ArticleRepository
     }
 
     /**
-     * 管理画面用の記事一覧を、指定された範囲だけ取得する
+     * 管理画面用の記事一覧を、指定された条件と範囲で取得する
      */
     public function findAll(
         string $sort = 'created_desc',
         int $limit = 10,
-        int $offset = 0
+        int $offset = 0,
+        string $keyword = '',
+        string $status = ''
     ): array {
         $orderBy = $this->getAdminOrderBy($sort);
 
@@ -36,12 +38,50 @@ final class ArticleRepository
             FROM articles AS a
             INNER JOIN categories AS c
                 ON c.id = a.category_id
+            WHERE 1 = 1
+        ';
+
+        $params = [];
+
+        if ($keyword !== '') {
+            $sql .= '
+                AND (
+                    a.title LIKE :keyword_title
+                    OR a.summary LIKE :keyword_summary
+                    OR a.content LIKE :keyword_content
+                )
+            ';
+
+            $searchKeyword = '%' . $keyword . '%';
+
+            $params[':keyword_title'] = $searchKeyword;
+            $params[':keyword_summary'] = $searchKeyword;
+            $params[':keyword_content'] = $searchKeyword;
+        }
+
+        if (in_array($status, ['published', 'draft'], true)) {
+            $sql .= '
+                AND a.status = :status
+            ';
+
+            $params[':status'] = $status;
+        }
+
+        $sql .= '
             ORDER BY ' . $orderBy . '
             LIMIT :limit
             OFFSET :offset
         ';
 
         $stmt = $this->pdo->prepare($sql);
+
+        foreach ($params as $name => $value) {
+            $stmt->bindValue(
+                $name,
+                $value,
+                PDO::PARAM_STR
+            );
+        }
 
         $stmt->bindValue(
             ':limit',
@@ -416,6 +456,52 @@ final class ArticleRepository
         $stmt->execute();
 
         return $stmt->fetchAll();
+    }
+
+    /**
+     * 管理画面の検索条件に一致する記事数を取得する
+     */
+    public function countAdminSearch(
+        string $keyword = '',
+        string $status = ''
+    ): int {
+        $sql = '
+            SELECT COUNT(*)
+            FROM articles AS a
+            WHERE 1 = 1
+        ';
+
+        $params = [];
+
+        if ($keyword !== '') {
+            $sql .= '
+                AND (
+                    a.title LIKE :keyword_title
+                    OR a.summary LIKE :keyword_summary
+                    OR a.content LIKE :keyword_content
+                )
+            ';
+
+            $searchKeyword = '%' . $keyword . '%';
+
+            $params[':keyword_title'] = $searchKeyword;
+            $params[':keyword_summary'] = $searchKeyword;
+            $params[':keyword_content'] = $searchKeyword;
+        }
+
+        if (in_array($status, ['published', 'draft'], true)) {
+            $sql .= '
+                AND a.status = :status
+            ';
+
+            $params[':status'] = $status;
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute($params);
+
+        return (int) $stmt->fetchColumn();
     }
 
     /**
