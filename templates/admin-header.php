@@ -49,7 +49,7 @@ $isCategoryPage = in_array($currentPage, $categoryPages, true);
 
 <body>
     <div class="admin-layout">
-        <aside class="admin-sidebar">
+        <aside id="admin-sidebar" class="admin-sidebar">
             <div class="admin-sidebar__header">
                 <a
                     class="admin-logo"
