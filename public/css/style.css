@@ -648,3 +648,81 @@ textarea {
         padding-left: 1.5em;
     }
 }
+
+/* ========================================
+   パンくずリスト
+======================================== */
+
+.breadcrumb {
+    margin-bottom: 22px;
+}
+
+.breadcrumb__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.breadcrumb__item {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    color: var(--public-text-muted);
+    font-size: 0.86rem;
+}
+
+.breadcrumb__item:not(:last-child)::after {
+    content: "›";
+    margin-left: 8px;
+    color: #98a2b3;
+}
+
+.breadcrumb__link {
+    color: var(--public-text-muted);
+    text-decoration: none;
+}
+
+.breadcrumb__link:hover {
+    color: var(--public-primary);
+    text-decoration: underline;
+}
+
+.breadcrumb__current {
+    display: inline-block;
+    max-width: min(48vw, 420px);
+    overflow: hidden;
+    color: var(--public-text);
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.site-container--article {
+    max-width: 860px;
+}
+
+@media (max-width: 640px) {
+    .breadcrumb {
+        margin-bottom: 16px;
+    }
+
+    .breadcrumb__list {
+        gap: 6px;
+    }
+
+    .breadcrumb__item {
+        font-size: 0.8rem;
+    }
+
+    .breadcrumb__item:not(:last-child)::after {
+        margin-left: 6px;
+    }
+
+    .breadcrumb__current {
+        max-width: 56vw;
+    }
+}
