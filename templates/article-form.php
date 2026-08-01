@@ -289,6 +289,12 @@ $selectedStatus = isset($article['status'])
                 ></button>
 
                 <button
+                    class="ql-image"
+                    type="button"
+                    aria-label="画像を挿入"
+                ></button>
+
+                <button
                     class="ql-clean"
                     type="button"
                     aria-label="書式を解除"
@@ -313,8 +319,9 @@ $selectedStatus = isset($article['status'])
 
         <p class="form-help">
             見出し、文字サイズ、文字色、背景色、文字揃え、インデント、
-            打ち消し線、コードブロックなどを使用できます。
+            打ち消し線、コードブロック、画像などを使用できます。
             リンクは文字を選択してから押してください。
+            画像はJPEG・PNG・WebP形式、5MB以下にしてください。
         </p>
     </div>
 
