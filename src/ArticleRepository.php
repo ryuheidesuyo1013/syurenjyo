@@ -603,6 +603,79 @@ final class ArticleRepository
     }
 
     /**
+     * サイトマップへ掲載する公開記事を取得する
+     */
+    public function findPublishedForSitemap(): array
+    {
+        $sql = '
+            SELECT
+                a.slug,
+                a.updated_at
+            FROM articles AS a
+            WHERE a.status = :status
+              AND a.published_at IS NOT NULL
+              AND a.published_at <= NOW()
+              AND a.noindex = 0
+            ORDER BY
+                a.updated_at DESC,
+                a.id DESC
+        ';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute([
+            ':status' => 'published',
+        ]);
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * RSSフィードへ掲載する公開記事を取得する
+     */
+    public function findPublishedForFeed(
+        int $limit = 20
+    ): array {
+        $limit = max(1, $limit);
+
+        $sql = '
+            SELECT
+                a.title,
+                a.slug,
+                a.summary,
+                a.published_at,
+                a.updated_at
+            FROM articles AS a
+            WHERE a.status = :status
+              AND a.published_at IS NOT NULL
+              AND a.published_at <= NOW()
+              AND a.noindex = 0
+            ORDER BY
+                a.published_at DESC,
+                a.id DESC
+            LIMIT :limit
+        ';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue(
+            ':status',
+            'published',
+            PDO::PARAM_STR
+        );
+
+        $stmt->bindValue(
+            ':limit',
+            $limit,
+            PDO::PARAM_INT
+        );
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    /**
      * 管理画面の検索条件に一致する記事数を取得する
      */
     public function countAdminSearch(
