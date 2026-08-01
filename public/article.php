@@ -79,6 +79,62 @@ $robots = !empty($article['noindex'])
 $ogType = 'article';
 $bodyClass = 'article-page';
 
+$breadcrumbs = [
+    [
+        'label' => 'ホーム',
+        'url' => 'https://蹴練場.jp/',
+    ],
+    [
+        'label' => '役立つコラム',
+        'url' => 'articles.php',
+    ],
+    [
+        'label' => (string) $article['category'],
+        'url' => 'articles.php?' . http_build_query([
+            'category' => (string) $article['category'],
+        ]),
+    ],
+    [
+        'label' => $articleTitle,
+        'url' => '',
+    ],
+];
+
+$breadcrumbStructuredData = [
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [],
+];
+
+foreach ($breadcrumbs as $index => $breadcrumb) {
+    $breadcrumbUrl = (string) ($breadcrumb['url'] ?? '');
+
+    if ($breadcrumbUrl !== '') {
+        if (
+            str_starts_with($breadcrumbUrl, 'http://')
+            || str_starts_with($breadcrumbUrl, 'https://')
+        ) {
+            $breadcrumbAbsoluteUrl = $breadcrumbUrl;
+        } elseif ($canonicalUrl !== '') {
+            $breadcrumbAbsoluteUrl = rtrim(
+                dirname($canonicalUrl),
+                '/'
+            ) . '/' . ltrim($breadcrumbUrl, '/');
+        } else {
+            $breadcrumbAbsoluteUrl = $breadcrumbUrl;
+        }
+    } else {
+        $breadcrumbAbsoluteUrl = $canonicalUrl;
+    }
+
+    $breadcrumbStructuredData['itemListElement'][] = [
+        '@type' => 'ListItem',
+        'position' => $index + 1,
+        'name' => (string) $breadcrumb['label'],
+        'item' => $breadcrumbAbsoluteUrl,
+    ];
+}
+
 $structuredData = [
     '@context' => 'https://schema.org',
     '@type' => 'Article',
@@ -112,13 +168,10 @@ require __DIR__ . '/../templates/public-header.php';
 ?>
 
     <main class="site-main">
-        <p>
-            <a href="articles.php">
-                記事一覧へ戻る
-            </a>
-        </p>
+        <div class="site-container site-container--article">
+            <?php require __DIR__ . '/../templates/breadcrumb.php'; ?>
 
-        <article class="article">
+            <article class="article">
             <p class="article__category">
                 <?= escape((string) $article['category']) ?>
             </p>
@@ -141,12 +194,26 @@ require __DIR__ . '/../templates/public-header.php';
             <div class="article-content">
                 <?= (string) $article['content'] ?>
             </div>
-        </article>
+            </article>
+        </div>
     </main>
 
     <script type="application/ld+json">
 <?= json_encode(
     $structuredData,
+    JSON_UNESCAPED_UNICODE
+    | JSON_UNESCAPED_SLASHES
+    | JSON_HEX_TAG
+    | JSON_HEX_AMP
+    | JSON_HEX_APOS
+    | JSON_HEX_QUOT
+    | JSON_PRETTY_PRINT
+) ?>
+    </script>
+
+    <script type="application/ld+json">
+<?= json_encode(
+    $breadcrumbStructuredData,
     JSON_UNESCAPED_UNICODE
     | JSON_UNESCAPED_SLASHES
     | JSON_HEX_TAG

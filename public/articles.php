@@ -61,7 +61,7 @@ $buildPageUrl = static function (int $page) use ($keyword, $category): string {
     return 'articles.php?' . http_build_query($queryParameters);
 };
 
-$pageTitle = '記事一覧｜蹴練場';
+$pageTitle = '役立つコラム｜蹴練場';
 $metaDescription = 'サッカーの技術、戦術、フィジカル、メンタル、栄養に関する記事を検索・閲覧できます。';
 $canonicalUrl = '';
 $ogImage = '';
@@ -69,11 +69,82 @@ $ogType = 'website';
 $robots = 'index, follow';
 $bodyClass = 'articles-page';
 
+$breadcrumbs = [
+    [
+        'label' => 'ホーム',
+        'url' => 'https://蹴練場.jp/',
+    ],
+    [
+        'label' => '役立つコラム',
+        'url' => '',
+    ],
+];
+
+$breadcrumbCanonicalUrl = $canonicalUrl;
+
+if ($breadcrumbCanonicalUrl === '') {
+    $httpsEnabled = (
+        isset($_SERVER['HTTPS'])
+        && $_SERVER['HTTPS'] !== ''
+        && $_SERVER['HTTPS'] !== 'off'
+    );
+
+    $scheme = $httpsEnabled
+        ? 'https'
+        : 'http';
+
+    $host = (string) ($_SERVER['HTTP_HOST'] ?? '');
+
+    if ($host !== '') {
+        $breadcrumbCanonicalUrl = $scheme
+            . '://'
+            . $host
+            . (string) ($_SERVER['REQUEST_URI'] ?? '');
+    }
+}
+
+$breadcrumbStructuredData = [
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [],
+];
+
+foreach ($breadcrumbs as $index => $breadcrumb) {
+    $breadcrumbUrl = (string) ($breadcrumb['url'] ?? '');
+
+    if ($breadcrumbUrl !== '') {
+        if (
+            str_starts_with($breadcrumbUrl, 'http://')
+            || str_starts_with($breadcrumbUrl, 'https://')
+        ) {
+            $breadcrumbAbsoluteUrl = $breadcrumbUrl;
+        } elseif ($breadcrumbCanonicalUrl !== '') {
+            $breadcrumbAbsoluteUrl = rtrim(
+                dirname($breadcrumbCanonicalUrl),
+                '/'
+            ) . '/' . ltrim($breadcrumbUrl, '/');
+        } else {
+            $breadcrumbAbsoluteUrl = $breadcrumbUrl;
+        }
+    } else {
+        $breadcrumbAbsoluteUrl = $breadcrumbCanonicalUrl;
+    }
+
+    $breadcrumbStructuredData['itemListElement'][] = [
+        '@type' => 'ListItem',
+        'position' => $index + 1,
+        'name' => (string) $breadcrumb['label'],
+        'item' => $breadcrumbAbsoluteUrl,
+    ];
+}
+
 require __DIR__ . '/../templates/public-header.php';
 ?>
 
     <main class="site-main">
         <div class="site-container">
+            <?php require __DIR__ . '/../templates/breadcrumb.php'; ?>
+
             <header class="page-hero">
                 <p class="page-hero__eyebrow">ARTICLES</p>
                 <h1 class="page-hero__title">記事一覧</h1>
@@ -240,5 +311,18 @@ require __DIR__ . '/../templates/public-header.php';
             </section>
         </div>
     </main>
+
+    <script type="application/ld+json">
+<?= json_encode(
+    $breadcrumbStructuredData,
+    JSON_UNESCAPED_UNICODE
+    | JSON_UNESCAPED_SLASHES
+    | JSON_HEX_TAG
+    | JSON_HEX_AMP
+    | JSON_HEX_APOS
+    | JSON_HEX_QUOT
+    | JSON_PRETTY_PRINT
+) ?>
+    </script>
 
 <?php require __DIR__ . '/../templates/public-footer.php'; ?>
