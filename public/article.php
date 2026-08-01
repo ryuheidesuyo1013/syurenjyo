@@ -79,6 +79,35 @@ $robots = !empty($article['noindex'])
 $ogType = 'article';
 $bodyClass = 'article-page';
 
+$structuredData = [
+    '@context' => 'https://schema.org',
+    '@type' => 'Article',
+    'headline' => $articleTitle,
+    'description' => $metaDescription,
+    'datePublished' => date(
+        DATE_ATOM,
+        strtotime((string) $article['published_at'])
+    ),
+    'dateModified' => date(
+        DATE_ATOM,
+        strtotime((string) $article['updated_at'])
+    ),
+    'mainEntityOfPage' => [
+        '@type' => 'WebPage',
+        '@id' => $canonicalUrl,
+    ],
+    'publisher' => [
+        '@type' => 'Organization',
+        'name' => '蹴練場',
+    ],
+];
+
+if ($ogImage !== '') {
+    $structuredData['image'] = [
+        $ogImage,
+    ];
+}
+
 require __DIR__ . '/../templates/public-header.php';
 ?>
 
@@ -114,5 +143,18 @@ require __DIR__ . '/../templates/public-header.php';
             </div>
         </article>
     </main>
+
+    <script type="application/ld+json">
+<?= json_encode(
+    $structuredData,
+    JSON_UNESCAPED_UNICODE
+    | JSON_UNESCAPED_SLASHES
+    | JSON_HEX_TAG
+    | JSON_HEX_AMP
+    | JSON_HEX_APOS
+    | JSON_HEX_QUOT
+    | JSON_PRETTY_PRINT
+) ?>
+    </script>
 
 <?php require __DIR__ . '/../templates/public-footer.php'; ?>
