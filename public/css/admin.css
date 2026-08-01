@@ -1103,3 +1103,236 @@ textarea.form-control {
         width: 100%;
     }
 }
+
+/* ========================================
+   Quill記事エディター
+======================================== */
+
+.article-editor-toolbar[hidden],
+.article-editor[hidden] {
+    display: none !important;
+}
+
+.js-article-form.quill-ready .article-content-source {
+    display: none !important;
+}
+
+.article-editor-toolbar.ql-toolbar.ql-snow {
+    border-color: var(--admin-border);
+    border-radius: 7px 7px 0 0;
+    background: #f8fafc;
+}
+
+.article-editor.ql-container.ql-snow {
+    min-height: 360px;
+    border-color: var(--admin-border);
+    border-radius: 0 0 7px 7px;
+    background: var(--admin-surface);
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.article-editor .ql-editor {
+    min-height: 360px;
+    line-height: 1.8;
+}
+
+.article-editor .ql-editor.ql-blank::before {
+    color: var(--admin-text-muted);
+    font-style: normal;
+}
+
+.article-editor:focus-within {
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px rgba(23, 105, 170, 0.15);
+}
+
+.article-editor--invalid.ql-container.ql-snow {
+    border-color: var(--admin-danger);
+    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.12);
+}
+
+@media (max-width: 640px) {
+    .article-editor-toolbar.ql-toolbar.ql-snow {
+        padding: 8px 6px;
+    }
+
+    .article-editor.ql-container.ql-snow,
+    .article-editor .ql-editor {
+        min-height: 280px;
+    }
+}
+
+/* Quill拡張ツールバー */
+.article-editor-toolbar .ql-formats {
+    margin-right: 10px;
+}
+
+.article-editor-toolbar .ql-picker.ql-header {
+    width: 104px;
+}
+
+.article-editor-toolbar .ql-picker.ql-size {
+    width: 78px;
+}
+
+.article-editor-toolbar .ql-picker.ql-align {
+    width: 42px;
+}
+
+.article-editor-toolbar .ql-picker-label,
+.article-editor-toolbar button {
+    border-radius: 4px;
+}
+
+.article-editor-toolbar .ql-picker-label:hover,
+.article-editor-toolbar button:hover {
+    background: rgba(23, 105, 170, 0.08);
+}
+
+.article-editor .ql-editor .ql-size-small {
+    font-size: 0.8em;
+}
+
+.article-editor .ql-editor .ql-size-large {
+    font-size: 1.35em;
+}
+
+.article-editor .ql-editor .ql-size-huge {
+    font-size: 1.8em;
+}
+
+.article-editor .ql-editor blockquote {
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    border-left: 4px solid var(--admin-primary);
+    color: var(--admin-text-muted);
+    background: #f8fafc;
+}
+
+.article-editor .ql-editor .ql-code-block-container {
+    margin: 1em 0;
+    border-radius: 7px;
+    background: #111827;
+    color: #f9fafb;
+}
+
+.article-editor .ql-editor a {
+    color: var(--admin-primary);
+    text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+    .article-editor-toolbar .ql-formats {
+        margin-right: 4px;
+        margin-bottom: 6px;
+    }
+
+    .article-editor-toolbar .ql-picker.ql-header {
+        width: 96px;
+    }
+
+    .article-editor-toolbar .ql-picker.ql-size {
+        width: 72px;
+    }
+}
+
+/* Quill画像アップロード */
+.js-article-form.article-image-uploading .article-editor-toolbar,
+.js-article-form.article-image-uploading .article-editor {
+    opacity: 0.65;
+    pointer-events: none;
+}
+
+.js-article-form.article-image-uploading .article-editor-toolbar {
+    position: relative;
+}
+
+.js-article-form.article-image-uploading .article-editor-toolbar::after {
+    content: "画像をアップロードしています…";
+    position: absolute;
+    right: 12px;
+    bottom: -34px;
+    z-index: 10;
+    padding: 4px 9px;
+    border: 1px solid var(--admin-border);
+    border-radius: 999px;
+    color: var(--admin-text);
+    background: var(--admin-surface);
+    font-size: 0.78rem;
+    font-weight: 700;
+    box-shadow: var(--admin-shadow);
+}
+
+.article-editor .ql-editor img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 1.25rem auto;
+    border-radius: 7px;
+}
+
+/* Quill画像ドラッグ＆ドロップ */
+.article-editor {
+    position: relative;
+}
+
+.article-editor--dragover.ql-container.ql-snow {
+    border-color: var(--admin-primary);
+    box-shadow:
+        0 0 0 3px rgba(23, 105, 170, 0.18),
+        inset 0 0 0 9999px rgba(23, 105, 170, 0.04);
+}
+
+.article-editor--dragover::after {
+    content: "ここへ画像をドロップ";
+    position: absolute;
+    z-index: 20;
+    inset: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed var(--admin-primary);
+    border-radius: 8px;
+    color: var(--admin-primary);
+    background: rgba(255, 255, 255, 0.92);
+    font-size: 1rem;
+    font-weight: 700;
+    pointer-events: none;
+}
+
+/* Quill画像アップロード進捗 */
+.article-upload-progress[hidden] {
+    display: none !important;
+}
+
+.article-upload-progress {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.article-upload-progress__track {
+    height: 8px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e5e7eb;
+}
+
+.article-upload-progress__bar {
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--admin-primary);
+    transition: width 0.15s ease;
+}
+
+.article-upload-progress__text {
+    min-width: 3ch;
+    color: var(--admin-text-muted);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: right;
+}
