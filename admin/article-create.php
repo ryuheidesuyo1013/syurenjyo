@@ -18,6 +18,29 @@ $categoryRepository = new CategoryRepository($pdo);
 
 $errors = [];
 $article = getEmptyArticleData();
+
+if (
+    isset($_SESSION['import_article'])
+    && is_array($_SESSION['import_article'])
+) {
+    $article = array_merge(
+        $article,
+        $_SESSION['import_article']
+    );
+
+    unset($_SESSION['import_article']);
+}
+
+$importNotice = '';
+
+if (
+    isset($_SESSION['article_import_notice'])
+    && is_string($_SESSION['article_import_notice'])
+) {
+    $importNotice = $_SESSION['article_import_notice'];
+    unset($_SESSION['article_import_notice']);
+}
+
 $categories = $categoryRepository->findAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -90,6 +113,12 @@ require __DIR__ . '/../templates/admin-header.php';
 </div>
 
 <section class="section">
+    <?php if ($importNotice !== ''): ?>
+        <div class="alert alert--success" role="alert">
+            <p><?= escape($importNotice) ?></p>
+        </div>
+    <?php endif; ?>
+
     <?php if ($categories === []): ?>
         <div
             class="alert alert--warning"

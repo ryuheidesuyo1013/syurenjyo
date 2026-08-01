@@ -106,6 +106,20 @@ $isImagePage = in_array($currentPage, $imagePages, true);
 
                     <li class="admin-navigation__item">
                         <a
+                            class="admin-navigation__link<?= $currentPage === 'article-import.php'
+                                ? ' is-active'
+                                : '' ?>"
+                            href="article-import.php"
+                            <?= $currentPage === 'article-import.php'
+                                ? 'aria-current="page"'
+                                : '' ?>
+                        >
+                            HTML記事インポート
+                        </a>
+                    </li>
+
+                    <li class="admin-navigation__item">
+                        <a
                             class="admin-navigation__link<?= $isCategoryPage
                                 ? ' is-active'
                                 : '' ?>"
