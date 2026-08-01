@@ -88,6 +88,7 @@ final class HtmlArticleImporter
         $this->removeUnnecessaryNodes($workingNode);
         $this->normalizeHeadingLevels($workingNode);
         $this->normalizeLegacyHighlights($workingNode);
+        $this->normalizeYouTubeEmbeds($workingNode);
         $this->removeUnwantedAttributes($workingNode);
 
         $imagePaths = $this->collectImagePaths($workingNode);
@@ -311,7 +312,6 @@ final class HtmlArticleImporter
             './/script',
             './/style',
             './/noscript',
-            './/iframe',
             './/*[contains(concat(" ", normalize-space(@class), " "), " article-table ")]',
             './/*[contains(concat(" ", normalize-space(@class), " "), " adsbygoogle ")]',
         ];
@@ -413,6 +413,119 @@ final class HtmlArticleImporter
     }
 
     /**
+     * YouTube埋め込みをレスポンシブ用のラッパーへ変換する。
+     * YouTube以外のiframeは削除する。
+     */
+    private function normalizeYouTubeEmbeds(
+        DOMElement $root
+    ): void {
+        $document = $root->ownerDocument;
+
+        if (!$document instanceof DOMDocument) {
+            return;
+        }
+
+        $iframes = [];
+
+        foreach ($root->getElementsByTagName('iframe') as $iframe) {
+            if ($iframe instanceof DOMElement) {
+                $iframes[] = $iframe;
+            }
+        }
+
+        foreach ($iframes as $iframe) {
+            $source = trim(
+                html_entity_decode(
+                    $iframe->getAttribute('src'),
+                    ENT_QUOTES | ENT_HTML5,
+                    'UTF-8'
+                )
+            );
+
+            $host = parse_url(
+                $source,
+                PHP_URL_HOST
+            );
+
+            $isYouTube = is_string($host)
+                && in_array(
+                    strtolower($host),
+                    [
+                        'www.youtube.com',
+                        'youtube.com',
+                        'www.youtube-nocookie.com',
+                        'youtube-nocookie.com',
+                    ],
+                    true
+                );
+
+            if (!$isYouTube) {
+                $iframe->parentNode?->removeChild($iframe);
+                continue;
+            }
+
+            $wrapper = $document->createElement('div');
+            $wrapper->setAttribute(
+                'class',
+                'video-wrapper'
+            );
+
+            $replacement = $document->createElement('iframe');
+            $replacement->setAttribute('src', $source);
+            $replacement->setAttribute(
+                'title',
+                trim($iframe->getAttribute('title')) !== ''
+                    ? trim($iframe->getAttribute('title'))
+                    : 'YouTube動画'
+            );
+            $replacement->setAttribute('loading', 'lazy');
+            $replacement->setAttribute(
+                'allow',
+                'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+            );
+            $replacement->setAttribute(
+                'referrerpolicy',
+                'strict-origin-when-cross-origin'
+            );
+            $replacement->setAttribute('allowfullscreen', '');
+
+            $wrapper->appendChild($replacement);
+
+            $container = $iframe->parentNode;
+
+            if (
+                $container instanceof DOMElement
+                && (
+                    $container->getAttribute('class') === 'youtube-blog'
+                    || $container->getAttribute('class') === 'youtube-blog-wrap'
+                )
+            ) {
+                $outerContainer = $container->parentNode;
+
+                if (
+                    $outerContainer instanceof DOMElement
+                    && $outerContainer->getAttribute('class') === 'youtube-blog-wrap'
+                ) {
+                    $outerContainer->parentNode?->replaceChild(
+                        $wrapper,
+                        $outerContainer
+                    );
+                } else {
+                    $container->parentNode?->replaceChild(
+                        $wrapper,
+                        $container
+                    );
+                }
+            } else {
+                $iframe->parentNode?->replaceChild(
+                    $wrapper,
+                    $iframe
+                );
+            }
+        }
+    }
+
+    /**
      * 不要なclass/style/event属性を除去する。
      */
     private function removeUnwantedAttributes(
@@ -434,8 +547,17 @@ final class HtmlArticleImporter
             foreach ($element->attributes as $attribute) {
                 $name = strtolower($attribute->name);
 
-                if (
+                $preserveVideoWrapperClass = (
                     $name === 'class'
+                    && $element->tagName === 'div'
+                    && $element->getAttribute('class') === 'video-wrapper'
+                );
+
+                if (
+                    (
+                        $name === 'class'
+                        && !$preserveVideoWrapperClass
+                    )
                     || $name === 'style'
                     || str_starts_with($name, 'on')
                 ) {
