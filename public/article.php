@@ -12,13 +12,15 @@ $repository = new ArticleRepository($pdo);
 $slug = trim((string) ($_GET['slug'] ?? ''));
 
 if ($slug === '') {
-    abort(404, '記事が見つかりません。');
+    require __DIR__ . '/404.php';
+    exit;
 }
 
 $article = $repository->findPublishedBySlug($slug);
 
 if ($article === false) {
-    abort(404, '記事が見つかりません。');
+    require __DIR__ . '/404.php';
+    exit;
 }
 
 $relatedArticles = $repository->findRelatedPublished(
