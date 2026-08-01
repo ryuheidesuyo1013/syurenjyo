@@ -178,6 +178,11 @@ final class ArticleRepository
                 c.name AS category,
                 c.slug AS category_slug,
                 a.summary,
+                a.seo_title,
+                a.meta_description,
+                a.og_image,
+                a.canonical_url,
+                a.noindex,
                 a.content,
                 a.status,
                 a.published_at
@@ -244,6 +249,11 @@ final class ArticleRepository
                 c.name AS category,
                 c.slug AS category_slug,
                 a.summary,
+                a.seo_title,
+                a.meta_description,
+                a.og_image,
+                a.canonical_url,
+                a.noindex,
                 a.content,
                 a.published_at,
                 a.updated_at
@@ -647,6 +657,11 @@ final class ArticleRepository
                 slug,
                 category_id,
                 summary,
+                seo_title,
+                meta_description,
+                og_image,
+                canonical_url,
+                noindex,
                 content,
                 status,
                 published_at
@@ -655,6 +670,11 @@ final class ArticleRepository
                 :slug,
                 :category_id,
                 :summary,
+                :seo_title,
+                :meta_description,
+                :og_image,
+                :canonical_url,
+                :noindex,
                 :content,
                 :status,
                 :published_at
@@ -668,6 +688,19 @@ final class ArticleRepository
             ':slug' => $article['slug'],
             ':category_id' => $article['category_id'],
             ':summary' => $article['summary'],
+            ':seo_title' => $article['seo_title'] !== ''
+                ? $article['seo_title']
+                : null,
+            ':meta_description' => $article['meta_description'] !== ''
+                ? $article['meta_description']
+                : null,
+            ':og_image' => $article['og_image'] !== ''
+                ? $article['og_image']
+                : null,
+            ':canonical_url' => $article['canonical_url'] !== ''
+                ? $article['canonical_url']
+                : null,
+            ':noindex' => $article['noindex'],
             ':content' => $article['content'],
             ':status' => $article['status'],
             ':published_at' => $publishedAt,
@@ -689,6 +722,11 @@ final class ArticleRepository
                 slug = :slug,
                 category_id = :category_id,
                 summary = :summary,
+                seo_title = :seo_title,
+                meta_description = :meta_description,
+                og_image = :og_image,
+                canonical_url = :canonical_url,
+                noindex = :noindex,
                 content = :content,
                 status = :status,
                 published_at = :published_at
@@ -702,6 +740,19 @@ final class ArticleRepository
             ':slug' => $article['slug'],
             ':category_id' => $article['category_id'],
             ':summary' => $article['summary'],
+            ':seo_title' => $article['seo_title'] !== ''
+                ? $article['seo_title']
+                : null,
+            ':meta_description' => $article['meta_description'] !== ''
+                ? $article['meta_description']
+                : null,
+            ':og_image' => $article['og_image'] !== ''
+                ? $article['og_image']
+                : null,
+            ':canonical_url' => $article['canonical_url'] !== ''
+                ? $article['canonical_url']
+                : null,
+            ':noindex' => $article['noindex'],
             ':content' => $article['content'],
             ':status' => $article['status'],
             ':published_at' => $publishedAt,

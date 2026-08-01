@@ -325,6 +325,146 @@ $selectedStatus = isset($article['status'])
         </p>
     </div>
 
+
+    <div class="form-group">
+        <div class="seo-settings">
+            <div class="seo-settings__header">
+                <div>
+                    <h2 class="seo-settings__title">
+                        SEO設定
+                    </h2>
+
+                    <p class="seo-settings__description">
+                        未入力の場合は、記事タイトルや概要など既存の情報を利用します。
+                    </p>
+                </div>
+            </div>
+
+            <div class="seo-settings__body">
+                <div class="form-group">
+                    <label
+                        class="form-label"
+                        for="seo_title"
+                    >
+                        SEOタイトル
+                    </label>
+
+                    <input
+                        class="form-control"
+                        type="text"
+                        id="seo_title"
+                        name="seo_title"
+                        value="<?= escape($article['seo_title'] ?? '') ?>"
+                        maxlength="255"
+                        autocomplete="off"
+                    >
+
+                    <p class="form-help">
+                        検索結果やSNS共有時に使うタイトルです。
+                        未入力の場合は記事タイトルを使用します。
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label
+                        class="form-label"
+                        for="meta_description"
+                    >
+                        メタディスクリプション
+                    </label>
+
+                    <textarea
+                        class="form-control"
+                        id="meta_description"
+                        name="meta_description"
+                        rows="4"
+                        maxlength="320"
+                    ><?= escape($article['meta_description'] ?? '') ?></textarea>
+
+                    <p class="form-help">
+                        検索結果に表示される記事説明です。
+                        未入力の場合は概要を使用します。
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label
+                        class="form-label"
+                        for="og_image"
+                    >
+                        OGP画像URL
+                    </label>
+
+                    <input
+                        class="form-control"
+                        type="url"
+                        id="og_image"
+                        name="og_image"
+                        value="<?= escape($article['og_image'] ?? '') ?>"
+                        maxlength="500"
+                        placeholder="https://example.com/uploads/2026/08/image.webp"
+                        autocomplete="url"
+                    >
+
+                    <p class="form-help">
+                        SNSで共有されたときに表示する画像URLです。
+                        画像管理画面からURLをコピーして入力できます。
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label
+                        class="form-label"
+                        for="canonical_url"
+                    >
+                        canonical URL
+                    </label>
+
+                    <input
+                        class="form-control"
+                        type="url"
+                        id="canonical_url"
+                        name="canonical_url"
+                        value="<?= escape($article['canonical_url'] ?? '') ?>"
+                        maxlength="500"
+                        placeholder="https://example.com/article-page"
+                        autocomplete="url"
+                    >
+
+                    <p class="form-help">
+                        同じ内容のページが複数ある場合に、優先するURLを指定します。
+                        通常は未入力で問題ありません。
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-field">
+                        <input
+                            class="checkbox-field__input"
+                            type="checkbox"
+                            name="noindex"
+                            value="1"
+                            <?= !empty($article['noindex'])
+                                ? 'checked'
+                                : '' ?>
+                        >
+
+                        <span class="checkbox-field__content">
+                            <span class="checkbox-field__label">
+                                検索エンジンに登録させない
+                            </span>
+
+                            <span class="checkbox-field__help">
+                                下書き確認用や一時的な記事など、
+                                検索結果へ表示したくない場合に選択します。
+                            </span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="form-group">
         <label
             class="form-label"

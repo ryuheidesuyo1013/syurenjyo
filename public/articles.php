@@ -8,12 +8,6 @@ require_once __DIR__ . '/../src/ArticleRepository.php';
 
 $repository = new ArticleRepository($pdo);
 
-/*
- * 検索条件を取得する
- *
- * 不正な形式で配列などが送信された場合に備えて、
- * 文字列であることを確認してからtrim()を使用する。
- */
 $keyword = isset($_GET['keyword']) && is_string($_GET['keyword'])
     ? trim($_GET['keyword'])
     : '';
@@ -22,11 +16,6 @@ $category = isset($_GET['category']) && is_string($_GET['category'])
     ? trim($_GET['category'])
     : '';
 
-/*
- * 現在のページ番号を取得する
- *
- * pageが未指定、不正な値、0以下の場合は1ページ目にする。
- */
 $pageInput = $_GET['page'] ?? '1';
 
 if (
@@ -39,50 +28,16 @@ if (
     $currentPage = (int) $pageInput;
 }
 
-/*
- * 1ページあたりの記事数
- */
 $perPage = 5;
+$totalArticles = $repository->countPublishedSearch($keyword, $category);
+$totalPages = max(1, (int) ceil($totalArticles / $perPage));
 
-/*
- * 検索条件に一致する公開記事の総件数を取得する
- */
-$totalArticles = $repository->countPublishedSearch(
-    $keyword,
-    $category
-);
-
-/*
- * 総ページ数を計算する
- *
- * 記事が0件の場合も、ページ番号の計算を安定させるため
- * 最低1ページとして扱う。
- */
-$totalPages = max(
-    1,
-    (int) ceil($totalArticles / $perPage)
-);
-
-/*
- * 総ページ数を超えるページ番号が指定された場合は、
- * 最後のページを表示する。
- */
 if ($currentPage > $totalPages) {
     $currentPage = $totalPages;
 }
 
-/*
- * SQLのOFFSETを計算する
- *
- * 1ページ目：0
- * 2ページ目：5
- * 3ページ目：10
- */
 $offset = ($currentPage - 1) * $perPage;
 
-/*
- * 現在のページに表示する記事だけ取得する
- */
 $articles = $repository->searchPublishedWithPagination(
     $keyword,
     $category,
@@ -90,16 +45,7 @@ $articles = $repository->searchPublishedWithPagination(
     $offset
 );
 
-/*
- * ページ移動用URLを生成する
- *
- * キーワードとカテゴリを維持したまま、
- * 指定したページへ移動できるURLを作る。
- */
-$buildPageUrl = static function (int $page) use (
-    $keyword,
-    $category
-): string {
+$buildPageUrl = static function (int $page) use ($keyword, $category): string {
     $queryParameters = [];
 
     if ($keyword !== '') {
@@ -114,177 +60,185 @@ $buildPageUrl = static function (int $page) use (
 
     return 'articles.php?' . http_build_query($queryParameters);
 };
+
+$pageTitle = '記事一覧｜蹴練場';
+$metaDescription = 'サッカーの技術、戦術、フィジカル、メンタル、栄養に関する記事を検索・閲覧できます。';
+$canonicalUrl = '';
+$ogImage = '';
+$ogType = 'website';
+$robots = 'index, follow';
+$bodyClass = 'articles-page';
+
+require __DIR__ . '/../templates/public-header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>記事一覧｜蹴練場</title>
-</head>
-<body>
-    <main>
-        <h1>記事一覧</h1>
-
-        <section>
-            <h2>記事を検索</h2>
-
-            <form method="get" action="articles.php">
-                <div>
-                    <label for="keyword">
-                        キーワード
-                    </label>
-
-                    <input
-                        type="search"
-                        id="keyword"
-                        name="keyword"
-                        value="<?= escape($keyword) ?>"
-                        placeholder="タイトル・概要・本文から検索"
-                    >
-                </div>
-
-                <div>
-                    <label for="category">
-                        カテゴリ
-                    </label>
-
-                    <select
-                        id="category"
-                        name="category"
-                    >
-                        <option value="">すべてのカテゴリ</option>
-
-                        <option value="技術" <?= $category === '技術' ? 'selected' : '' ?>>
-                            技術
-                        </option>
-
-                        <option value="戦術" <?= $category === '戦術' ? 'selected' : '' ?>>
-                            戦術
-                        </option>
-
-                        <option value="フィジカル" <?= $category === 'フィジカル' ? 'selected' : '' ?>>
-                            フィジカル
-                        </option>
-
-                        <option value="メンタル" <?= $category === 'メンタル' ? 'selected' : '' ?>>
-                            メンタル
-                        </option>
-
-                        <option value="栄養" <?= $category === '栄養' ? 'selected' : '' ?>>
-                            栄養
-                        </option>
-
-                        <option value="その他" <?= $category === 'その他' ? 'selected' : '' ?>>
-                            その他
-                        </option>
-                    </select>
-                </div>
-
-                <div>
-                    <button type="submit">
-                        検索
-                    </button>
-
-                    <a href="articles.php">
-                        検索条件をリセット
-                    </a>
-                </div>
-            </form>
-        </section>
-
-        <section>
-            <h2>検索結果</h2>
-
-            <?php if ($keyword !== '' || $category !== ''): ?>
-                <p>
-                    検索結果：
-                    <?= $totalArticles ?>件
+    <main class="site-main">
+        <div class="site-container">
+            <header class="page-hero">
+                <p class="page-hero__eyebrow">ARTICLES</p>
+                <h1 class="page-hero__title">記事一覧</h1>
+                <p class="page-hero__description">
+                    サッカーに関する知識や練習方法を、カテゴリやキーワードから探せます。
                 </p>
-            <?php endif; ?>
+            </header>
 
-            <?php if ($articles === []): ?>
-                <p>条件に一致する公開記事はありません。</p>
-            <?php else: ?>
-
-                <?php foreach ($articles as $article): ?>
-
-                    <article>
-                        <p>
-                            <?= escape($article['category']) ?>
+            <section class="public-section">
+                <div class="public-card search-card">
+                    <div class="section-heading">
+                        <h2 class="section-heading__title">記事を検索</h2>
+                        <p class="section-heading__description">
+                            キーワードとカテゴリを組み合わせて絞り込めます。
                         </p>
+                    </div>
 
-                        <h2>
-                            <a href="article.php?slug=<?= urlencode($article['slug']) ?>">
-                                <?= escape($article['title']) ?>
+                    <form class="public-search-form" method="get" action="articles.php">
+                        <div class="public-form-field">
+                            <label class="public-form-label" for="keyword">キーワード</label>
+                            <input
+                                class="public-form-control"
+                                type="search"
+                                id="keyword"
+                                name="keyword"
+                                value="<?= escape($keyword) ?>"
+                                placeholder="タイトル・概要・本文から検索"
+                            >
+                        </div>
+
+                        <div class="public-form-field">
+                            <label class="public-form-label" for="category">カテゴリ</label>
+                            <select class="public-form-control" id="category" name="category">
+                                <option value="">すべてのカテゴリ</option>
+                                <?php foreach (['技術', '戦術', 'フィジカル', 'メンタル', '栄養', 'その他'] as $categoryOption): ?>
+                                    <option
+                                        value="<?= escape($categoryOption) ?>"
+                                        <?= $category === $categoryOption ? 'selected' : '' ?>
+                                    >
+                                        <?= escape($categoryOption) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="public-search-form__actions">
+                            <button class="public-button" type="submit">検索</button>
+                            <a class="public-button public-button--outline" href="articles.php">
+                                条件をリセット
                             </a>
-                        </h2>
+                        </div>
+                    </form>
+                </div>
+            </section>
 
-                        <?php if (!empty($article['summary'])): ?>
-                            <p>
-                                <?= escape($article['summary']) ?>
-                            </p>
-                        <?php endif; ?>
-
-                        <p>
-                            公開日：
-                            <?= escape($article['published_at']) ?>
+            <section class="public-section">
+                <div class="section-heading section-heading--row">
+                    <div>
+                        <h2 class="section-heading__title">検索結果</h2>
+                        <p class="section-heading__description">
+                            <?= escape((string) $totalArticles) ?>件の記事が見つかりました。
                         </p>
-                    </article>
+                    </div>
+                </div>
 
-                <?php endforeach; ?>
+                <?php if ($articles === []): ?>
+                    <div class="public-card empty-state">
+                        <p>条件に一致する公開記事はありません。</p>
+                    </div>
+                <?php else: ?>
+                    <div class="article-list">
+                        <?php foreach ($articles as $article): ?>
+                            <article class="article-card">
+                                <div class="article-card__body">
+                                    <p class="article-card__category">
+                                        <?= escape((string) $article['category']) ?>
+                                    </p>
 
-                <?php if ($totalPages > 1): ?>
+                                    <h2 class="article-card__title">
+                                        <a href="article.php?slug=<?= urlencode((string) $article['slug']) ?>">
+                                            <?= escape((string) $article['title']) ?>
+                                        </a>
+                                    </h2>
 
-                    <nav aria-label="ページネーション">
+                                    <?php if (!empty($article['summary'])): ?>
+                                        <p class="article-card__summary">
+                                            <?= escape((string) $article['summary']) ?>
+                                        </p>
+                                    <?php endif; ?>
 
-                        <?php if ($currentPage > 1): ?>
+                                    <div class="article-card__footer">
+                                        <p class="article-card__date">
+                                            公開日：<?= escape((string) $article['published_at']) ?>
+                                        </p>
 
-                            <a href="<?= escape($buildPageUrl($currentPage - 1)) ?>">
-                                ← 前へ
-                            </a>
+                                        <a
+                                            class="article-card__link"
+                                            href="article.php?slug=<?= urlencode((string) $article['slug']) ?>"
+                                        >
+                                            続きを読む
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+                        <?php endforeach; ?>
+                    </div>
 
-                        <?php endif; ?>
-
-                        <?php for ($page = 1; $page <= $totalPages; $page++): ?>
-
-                            <?php if ($page === $currentPage): ?>
-
-                                <strong>
-                                    <?= $page ?>
-                                </strong>
-
-                            <?php else: ?>
-
-                                <a href="<?= escape($buildPageUrl($page)) ?>">
-                                    <?= $page ?>
+                    <?php if ($totalPages > 1): ?>
+                        <nav class="public-pagination" aria-label="ページネーション">
+                            <?php if ($currentPage > 1): ?>
+                                <a
+                                    class="public-pagination__link public-pagination__link--wide"
+                                    href="<?= escape($buildPageUrl($currentPage - 1)) ?>"
+                                >
+                                    ← 前へ
                                 </a>
-
+                            <?php else: ?>
+                                <span
+                                    class="public-pagination__link public-pagination__link--wide public-pagination__link--disabled"
+                                    aria-disabled="true"
+                                >
+                                    ← 前へ
+                                </span>
                             <?php endif; ?>
 
-                        <?php endfor; ?>
+                            <div class="public-pagination__numbers">
+                                <?php for ($page = 1; $page <= $totalPages; $page++): ?>
+                                    <?php if ($page === $currentPage): ?>
+                                        <span
+                                            class="public-pagination__link public-pagination__link--current"
+                                            aria-current="page"
+                                        >
+                                            <?= $page ?>
+                                        </span>
+                                    <?php else: ?>
+                                        <a
+                                            class="public-pagination__link"
+                                            href="<?= escape($buildPageUrl($page)) ?>"
+                                        >
+                                            <?= $page ?>
+                                        </a>
+                                    <?php endif; ?>
+                                <?php endfor; ?>
+                            </div>
 
-                        <?php if ($currentPage < $totalPages): ?>
-
-                            <a href="<?= escape($buildPageUrl($currentPage + 1)) ?>">
-                                次へ →
-                            </a>
-
-                        <?php endif; ?>
-
-                    </nav>
-
+                            <?php if ($currentPage < $totalPages): ?>
+                                <a
+                                    class="public-pagination__link public-pagination__link--wide"
+                                    href="<?= escape($buildPageUrl($currentPage + 1)) ?>"
+                                >
+                                    次へ →
+                                </a>
+                            <?php else: ?>
+                                <span
+                                    class="public-pagination__link public-pagination__link--wide public-pagination__link--disabled"
+                                    aria-disabled="true"
+                                >
+                                    次へ →
+                                </span>
+                            <?php endif; ?>
+                        </nav>
+                    <?php endif; ?>
                 <?php endif; ?>
-
-            <?php endif; ?>
-
-        </section>
+            </section>
+        </div>
     </main>
-</body>
-</html>
+
+<?php require __DIR__ . '/../templates/public-footer.php'; ?>
