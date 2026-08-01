@@ -8,6 +8,8 @@ require_once __DIR__ . '/../src/ArticleRepository.php';
 
 $repository = new ArticleRepository($pdo);
 
+$latestArticles = $repository->findLatestPublished(3);
+
 $keyword = isset($_GET['keyword']) && is_string($_GET['keyword'])
     ? trim($_GET['keyword'])
     : '';
@@ -152,6 +154,78 @@ require __DIR__ . '/../templates/public-header.php';
                     サッカーに関する知識や練習方法を、カテゴリやキーワードから探せます。
                 </p>
             </header>
+
+            <?php if ($latestArticles !== []): ?>
+                <section
+                    class="public-section latest-articles"
+                    aria-labelledby="latest-articles-title"
+                >
+                    <div class="section-heading">
+                        <h2
+                            class="section-heading__title"
+                            id="latest-articles-title"
+                        >
+                            最新記事
+                        </h2>
+
+                        <p class="section-heading__description">
+                            新しく公開された記事を紹介します。
+                        </p>
+                    </div>
+
+                    <div class="latest-articles__grid">
+                        <?php foreach ($latestArticles as $latestArticle): ?>
+                            <article class="latest-article-card">
+                                <div class="latest-article-card__body">
+                                    <p class="latest-article-card__category">
+                                        <?= escape(
+                                            (string) $latestArticle['category']
+                                        ) ?>
+                                    </p>
+
+                                    <h3 class="latest-article-card__title">
+                                        <a
+                                            href="article.php?slug=<?= urlencode(
+                                                (string) $latestArticle['slug']
+                                            ) ?>"
+                                        >
+                                            <?= escape(
+                                                (string) $latestArticle['title']
+                                            ) ?>
+                                        </a>
+                                    </h3>
+
+                                    <?php if (!empty($latestArticle['summary'])): ?>
+                                        <p class="latest-article-card__summary">
+                                            <?= escape(
+                                                (string) $latestArticle['summary']
+                                            ) ?>
+                                        </p>
+                                    <?php endif; ?>
+
+                                    <div class="latest-article-card__footer">
+                                        <p class="latest-article-card__date">
+                                            公開日：
+                                            <?= escape(
+                                                (string) $latestArticle['published_at']
+                                            ) ?>
+                                        </p>
+
+                                        <a
+                                            class="latest-article-card__link"
+                                            href="article.php?slug=<?= urlencode(
+                                                (string) $latestArticle['slug']
+                                            ) ?>"
+                                        >
+                                            続きを読む
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
+            <?php endif; ?>
 
             <section class="public-section">
                 <div class="public-card search-card">

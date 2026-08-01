@@ -350,6 +350,55 @@ final class ArticleRepository
     }
 
     /**
+     * 最新の公開記事を取得する
+     */
+    public function findLatestPublished(
+        int $limit = 3
+    ): array {
+        $limit = max(1, $limit);
+
+        $sql = '
+            SELECT
+                a.id,
+                a.title,
+                a.slug,
+                a.category_id,
+                c.name AS category,
+                c.slug AS category_slug,
+                a.summary,
+                a.published_at
+            FROM articles AS a
+            INNER JOIN categories AS c
+                ON c.id = a.category_id
+            WHERE a.status = :status
+              AND a.published_at IS NOT NULL
+              AND a.published_at <= NOW()
+            ORDER BY
+                a.published_at DESC,
+                a.id DESC
+            LIMIT :limit
+        ';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue(
+            ':status',
+            'published',
+            PDO::PARAM_STR
+        );
+
+        $stmt->bindValue(
+            ':limit',
+            $limit,
+            PDO::PARAM_INT
+        );
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    /**
      * 公開記事を検索する
      */
     public function searchPublished(

@@ -848,3 +848,117 @@ textarea {
         flex-direction: column;
     }
 }
+
+/* ========================================
+   最新記事
+======================================== */
+
+.latest-articles__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.latest-article-card {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--public-border);
+    border-radius: var(--public-radius);
+    background: var(--public-surface);
+    box-shadow: var(--public-shadow);
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.latest-article-card:hover {
+    border-color: rgba(23, 105, 170, 0.45);
+    box-shadow: 0 14px 34px rgba(16, 24, 40, 0.11);
+    transform: translateY(-2px);
+}
+
+.latest-article-card__body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 22px;
+}
+
+.latest-article-card__category {
+    align-self: flex-start;
+    margin: 0 0 10px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    color: var(--public-primary);
+    background: var(--public-accent);
+    font-size: 0.76rem;
+    font-weight: 800;
+}
+
+.latest-article-card__title {
+    margin: 0;
+    font-size: 1.08rem;
+    line-height: 1.5;
+}
+
+.latest-article-card__title a {
+    color: var(--public-text);
+    text-decoration: none;
+}
+
+.latest-article-card__title a:hover {
+    color: var(--public-primary);
+}
+
+.latest-article-card__summary {
+    display: -webkit-box;
+    margin: 12px 0 0;
+    overflow: hidden;
+    color: var(--public-text-muted);
+    font-size: 0.9rem;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.latest-article-card__footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 18px;
+}
+
+.latest-article-card__date {
+    margin: 0;
+    color: var(--public-text-muted);
+    font-size: 0.78rem;
+}
+
+.latest-article-card__link {
+    flex-shrink: 0;
+    font-size: 0.86rem;
+    font-weight: 800;
+}
+
+@media (max-width: 900px) {
+    .latest-articles__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .latest-articles__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .latest-article-card__body {
+        padding: 20px;
+    }
+
+    .latest-article-card__footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
