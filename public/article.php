@@ -21,6 +21,12 @@ if ($article === false) {
     abort(404, '記事が見つかりません。');
 }
 
+$relatedArticles = $repository->findRelatedPublished(
+    (int) $article['category_id'],
+    (int) $article['id'],
+    3
+);
+
 $articleTitle = (string) $article['title'];
 
 $seoTitle = trim(
@@ -195,6 +201,78 @@ require __DIR__ . '/../templates/public-header.php';
                 <?= (string) $article['content'] ?>
             </div>
             </article>
+
+            <?php if ($relatedArticles !== []): ?>
+                <section
+                    class="related-articles"
+                    aria-labelledby="related-articles-title"
+                >
+                    <div class="section-heading">
+                        <h2
+                            class="section-heading__title"
+                            id="related-articles-title"
+                        >
+                            関連記事
+                        </h2>
+
+                        <p class="section-heading__description">
+                            同じカテゴリの公開記事を紹介します。
+                        </p>
+                    </div>
+
+                    <div class="related-articles__grid">
+                        <?php foreach ($relatedArticles as $relatedArticle): ?>
+                            <article class="related-article-card">
+                                <div class="related-article-card__body">
+                                    <p class="related-article-card__category">
+                                        <?= escape(
+                                            (string) $relatedArticle['category']
+                                        ) ?>
+                                    </p>
+
+                                    <h3 class="related-article-card__title">
+                                        <a
+                                            href="article.php?slug=<?= urlencode(
+                                                (string) $relatedArticle['slug']
+                                            ) ?>"
+                                        >
+                                            <?= escape(
+                                                (string) $relatedArticle['title']
+                                            ) ?>
+                                        </a>
+                                    </h3>
+
+                                    <?php if (!empty($relatedArticle['summary'])): ?>
+                                        <p class="related-article-card__summary">
+                                            <?= escape(
+                                                (string) $relatedArticle['summary']
+                                            ) ?>
+                                        </p>
+                                    <?php endif; ?>
+
+                                    <div class="related-article-card__footer">
+                                        <p class="related-article-card__date">
+                                            公開日：
+                                            <?= escape(
+                                                (string) $relatedArticle['published_at']
+                                            ) ?>
+                                        </p>
+
+                                        <a
+                                            class="related-article-card__link"
+                                            href="article.php?slug=<?= urlencode(
+                                                (string) $relatedArticle['slug']
+                                            ) ?>"
+                                        >
+                                            続きを読む
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
+            <?php endif; ?>
         </div>
     </main>
 
