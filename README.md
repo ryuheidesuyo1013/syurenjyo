@@ -37,7 +37,6 @@ https://蹴練場.jp/
 * Git
 * GitHub
 * VS Code
-* WinSCP
 * Canva
 * XAMPP
 
